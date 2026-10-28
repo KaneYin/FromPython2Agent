@@ -1,0 +1,1718 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://llmsystem.github.io/llmsystemhomework/assignment_4/">
+      
+      
+        <link rel="prev" href="../assignment_3/">
+      
+      
+        <link rel="next" href="../assignment_5/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Assignment 4: Transformer CUDA Acceleration - CMU 11868 LLM Systems Assignments</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#assignment-4-transformer-cuda-acceleration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-header__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CMU 11868 LLM Systems Assignments
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Assignment 4: Transformer CUDA Acceleration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-nav__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CMU 11868 LLM Systems Assignments
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 1: CUDA Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 2: Minitorch Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 3: Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 4: Transformer CUDA Acceleration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 4: Transformer CUDA Acceleration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up the Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-copy-and-compile-cuda-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Copy and Compile CUDA Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-copy-files-from-assignment-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Copy Files from Assignment 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-incrementally-add-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Incrementally Add Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-softmax-optimization-40-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Softmax Optimization (40 points)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Softmax Optimization (40 points)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-11-softmax-forward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.1: Softmax Forward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-softmax-forward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Softmax Forward Kernels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Softmax Forward Kernels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-the-maximum-value-for-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computing the Maximum Value for Normalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computing the Maximum Value for Normalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps-to-compute-the-maximum-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps to Compute the Maximum Value:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#block-level-reduction-for-global-max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block-Level Reduction for Global Max:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-12-softmax-backward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.2: Softmax Backward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-softmax-backward-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Softmax Backward Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-layernorm-optimization-40-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: LayerNorm Optimization (40 points)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: LayerNorm Optimization (40 points)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-21-layernorm-forward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.1: LayerNorm Forward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-layernorm-forward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding LayerNorm Forward Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-22-layernorm-backward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.2: LayerNorm Backward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps-to-implement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps to Implement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-layernorm-backward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding LayerNorm Backward Kernels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding LayerNorm Backward Kernels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamma-and-beta-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gamma and Beta Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-3-adopt-fused-kernels-in-transformer-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3: Adopt Fused Kernels in Transformer (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 5: Distributed Training and Parallelism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 6: Advanced Training and Inference Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 7: Introduction to RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up the Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-copy-and-compile-cuda-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Copy and Compile CUDA Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-copy-files-from-assignment-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Copy Files from Assignment 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-incrementally-add-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Incrementally Add Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-softmax-optimization-40-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Softmax Optimization (40 points)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Softmax Optimization (40 points)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-11-softmax-forward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.1: Softmax Forward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instructions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-softmax-forward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Softmax Forward Kernels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Softmax Forward Kernels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-the-maximum-value-for-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Computing the Maximum Value for Normalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computing the Maximum Value for Normalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps-to-compute-the-maximum-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps to Compute the Maximum Value:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#block-level-reduction-for-global-max" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block-Level Reduction for Global Max:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-12-softmax-backward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.2: Softmax Backward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-softmax-backward-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Softmax Backward Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-layernorm-optimization-40-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: LayerNorm Optimization (40 points)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: LayerNorm Optimization (40 points)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-21-layernorm-forward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.1: LayerNorm Forward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-layernorm-forward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding LayerNorm Forward Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithmic Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-22-layernorm-backward-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.2: LayerNorm Backward (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps-to-implement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps to Implement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-layernorm-backward-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding LayerNorm Backward Kernels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding LayerNorm Backward Kernels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gamma-and-beta-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gamma and Beta Gradients
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-3-adopt-fused-kernels-in-transformer-20-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3: Adopt Fused Kernels in Transformer (20 points)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="assignment-4-transformer-cuda-acceleration">Assignment 4: Transformer CUDA Acceleration</h1>
+<p>In this assignment, you'll extend the work from Assignment 1 and 2 to speed up the transformer model for more efficient training and inference. You will focus on optimizing the <strong>Softmax</strong> and <strong>LayerNorm</strong> batch reduction operations by writing custom CUDA code.  </p>
+<p>The CUDA optimizations are based on methods from the <a href="https://arxiv.org/pdf/2010.13887">LightSeq</a> and <a href="https://arxiv.org/pdf/2110.05722">LightSeq2</a> papers. We <strong>strongly encourage</strong> you to refer to the papers and the relevant lecture slides while working on this assignment. Before starting to write the CUDA code, make sure you have read through the write-up and understood what each kernel is doing.  </p>
+<h2 id="setting-up-the-code">Setting up the Code</h2>
+<p>The starting code base is provided in <a href="https://github.com/llmsystem/llmsys_hw4">llmsys_hw4</a>.</p>
+<p>You will need to merge it with your implementation from the previous assignments. Here are our suggested steps:  </p>
+<h3 id="step-1-install-requirements">Step 1: Install Requirements</h3>
+<p>Install the required dependencies and miniTorch by running the following commands:  </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># instruction on psc</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>module<span class="w"> </span>load<span class="w"> </span>cuda/12.4
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Please ensure you are using python 3.12+ (conda or uv are the best options to have that on PSC)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="o">=</span><span class="m">3</span>.12
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-Ue<span class="w"> </span>.
+</span></code></pre></div>
+<h3 id="step-2-copy-and-compile-cuda-kernels">Step 2: Copy and Compile CUDA Kernels</h3>
+<p>Copy the CUDA kernel file <code>combine.cu</code> from Assignment 3 and compile it:  </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From Assignment 2 to the current directory</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cp<span class="w"> </span>&lt;path_to_assignment_3&gt;/combine.cu<span class="w"> </span>src/combine.cu<span class="w">  </span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Compile the CUDA kernels</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bash<span class="w"> </span>compile_cuda.sh
+</span></code></pre></div>
+<h3 id="step-3-copy-files-from-assignment-3">Step 3: Copy Files from Assignment 3</h3>
+<p>Copy <code>autodiff.py</code> from <strong>Assignment 3</strong> to the specified location:  </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>&lt;path_to_assignment_1&gt;/autodiff.py<span class="w"> </span>minitorch/autodiff.py
+</span></code></pre></div>
+<p><strong>Hints for Copying and Pasting</strong>:
+When copying the <code>backpropagate()</code> function, make sure to double-check the implementation you wrote. It's a good idea to set a default value of 0.0 before accumulating the gradients in <code>backpropagate()</code>. We recommend initializing the derivatives map for each unique_id to 0.0 outside the for loop.</p>
+<h3 id="step-4-incrementally-add-functions">Step 4: Incrementally Add Functions</h3>
+<p>Keep copying several other functions from Assignment 3 as needed to complete this assignment. Only copy the functions that you modified from Assignment 3 for the following files:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>minitorch/nn.py
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>minitorch/modules_basic.py
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>minitorch/modules_transfomer.py
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>project/run_machine_translation.py
+</span></code></pre></div></p>
+<hr />
+<h2 id="problem-1-softmax-optimization-40-points">Problem 1: Softmax Optimization (40 points)</h2>
+<h3 id="problem-11-softmax-forward-20-points">Problem 1.1: Softmax Forward (20 points)</h3>
+<p>In this part, you will implement a fused kernel of softmax in the attention mechanism.  </p>
+<p>The softmax function for a vector $<span class="arithmatex"><span class="MathJax_Preview">\( \mathbf{x} \)</span><script type="math/tex">\( \mathbf{x} \)</script></span>$ is defined as:  </p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\[
+\text{softmax}(\mathbf{x})_i = \frac{e^{x_i}}{\sum_{j} e^{x_j}}
+\]
+</div>
+<script type="math/tex; mode=display">
+\[
+\text{softmax}(\mathbf{x})_i = \frac{e^{x_i}}{\sum_{j} e^{x_j}}
+\]
+</script>
+</div>
+<p>where $<span class="arithmatex"><span class="MathJax_Preview">\( x_i \)</span><script type="math/tex">\( x_i \)</script></span>$ is the $<span class="arithmatex"><span class="MathJax_Preview">\( i \)</span><script type="math/tex">\( i \)</script></span>$-th element of $<span class="arithmatex"><span class="MathJax_Preview">\( \mathbf{x} \)</span><script type="math/tex">\( \mathbf{x} \)</script></span>$.  </p>
+<p>The kernel also incorporates attention mechanisms, particularly in its handling of attention masks. Attention masks are used to control the model's focus on specific parts of the input.  </p>
+<h3 id="instructions">Instructions</h3>
+<ol>
+<li>
+<p><strong>Implement the CUDA Kernel</strong><br />
+  Write the CUDA kernel for softmax in <code>src/softmax_kernel.cu</code>:<br />
+  <div class="language-cuda highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">block_dim</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ele_per_thread</span><span class="o">&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_attn_softmax</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">inp</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">      </span><span class="p">...</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">block_dim</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ele_per_thread</span><span class="o">&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_attn_softmax_lt32</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">inp</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="p">...</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">}</span>
+</span></code></pre></div></p>
+<ul>
+<li>The <code>ker_attn_softmax_lt32</code> kernel is already implemented for sequences shorter than 32 and does not require block-level parallelism.  </li>
+<li>Review the provided implementation of <code>ker_attn_softmax_lt32</code> and use it as a reference to implement <code>ker_attn_softmax</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Compile the CUDA File</strong><br />
+   Compile the CUDA file using the following command:  </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nvcc<span class="w"> </span>-o<span class="w"> </span>minitorch/cuda_kernels/softmax_kernel.so<span class="w"> </span>--shared<span class="w"> </span>src/softmax_kernel.cu<span class="w"> </span>-Xcompiler<span class="w"> </span>-fPIC
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Bind the Kernel to miniTorch</strong><br />
+   In <code>minitorch/cuda_kernel_ops.py</code>, bind the kernel by passing the CUDA stream:  </p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CudaKernelOps</span><span class="p">(</span><span class="n">TensorOps</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">attn_softmax_fw</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>In <code>minitorch/tensor_functions.py</code>, define the softmax forward function:  </p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Attn_Softmax</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Test the Implementation</strong><br />
+   Run the provided test script and ensure your implementation achieves an average speedup of approximately <strong>6.5×</strong>:  </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>-m<span class="w"> </span>kernel_tests.test_softmax_fw
+</span></code></pre></div>
+</li>
+</ol>
+<hr />
+<h3 id="understanding-softmax-forward-kernels">Understanding Softmax Forward Kernels</h3>
+<p>The <code>ker_attn_softmax_lt32</code> and <code>ker_attn_softmax</code> kernels are optimized for different input sizes:  </p>
+<ul>
+<li>
+<p><strong><code>ker_attn_softmax_lt32</code>:</strong>  </p>
+<ul>
+<li>Utilizes warp-level primitives for reduction.  </li>
+<li>Suitable for smaller input sizes (&lt;32 sequence length).  </li>
+<li>Efficient parallel reduction without block-wide synchronization.  </li>
+</ul>
+</li>
+<li>
+<p><strong><code>ker_attn_softmax</code>:</strong>  </p>
+<ul>
+<li>Employs block-level reduction techniques.  </li>
+<li>Suitable for larger input sizes.  </li>
+<li>Includes two phases of reduction (max and sum) followed by a normalization step with synchronization.  </li>
+</ul>
+</li>
+</ul>
+<hr />
+<h4 id="algorithmic-steps">Algorithmic Steps</h4>
+<p>The softmax computation in both kernels consists of three main steps:  </p>
+<ol>
+<li>
+<p><strong>Compute Max</strong>  </p>
+<ul>
+<li>Identify the maximum value for normalization to avoid numerical overflow during exponentiation.  </li>
+</ul>
+</li>
+<li>
+<p><strong>Compute Exponentials and Sum</strong>  </p>
+<ul>
+<li>Calculate the exponentials of normalized values and their sum for final normalization.  </li>
+</ul>
+</li>
+<li>
+<p><strong>Compute Final Result</strong>  </p>
+<ul>
+<li>Normalize the exponentials by dividing by the sum to obtain softmax probabilities.  </li>
+<li>Use CUB library's <code>BlockStore</code> to minimize memory transactions.  </li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="computing-the-maximum-value-for-normalization">Computing the Maximum Value for Normalization</h3>
+<p>Both kernels implement the maximum value computation in the same way. Study the implementation in <code>ker_attn_softmax_lt32</code>.  </p>
+<h4 id="steps-to-compute-the-maximum-value">Steps to Compute the Maximum Value:</h4>
+<ol>
+<li>
+<p><strong>Thread Local Max:</strong><br />
+   Each thread computes a local maximum:  </p>
+<ul>
+<li>Intermediate values and attention mask adjustments are stored in <code>val[token_per_reduce][ele_per_thread]</code>.  </li>
+<li>The thread-local maximum is recorded in <code>l_max[token_per_reduce]</code>, initialized to <code>REDUCE_FLOAT_INF_NEG</code>.  </li>
+</ul>
+</li>
+<li>
+<p><strong>Future Token Masking:</strong><br />
+   If future tokens are masked, their values are excluded from the maximum computation by setting them to <code>REDUCE_FLOAT_INF_NEG</code>.  </p>
+</li>
+<li>
+<p><strong>Attention Mask Adjustment:</strong><br />
+   Adjust the input value by adding the corresponding attention mask value.  </p>
+</li>
+<li>
+<p><strong>Iterative Updates:</strong><br />
+   Update the thread-local maximum using <code>fmaxf</code>.  </p>
+</li>
+</ol>
+<hr />
+<h4 id="block-level-reduction-for-global-max">Block-Level Reduction for Global Max:</h4>
+<ul>
+<li>
+<p><strong><code>ker_attn_softmax_lt32</code>:</strong>  </p>
+<ul>
+<li>Uses a warp-level reduction with a custom <code>warpReduce</code> function.  </li>
+</ul>
+</li>
+<li>
+<p><strong><code>ker_attn_softmax</code>:</strong>  </p>
+<ul>
+<li>Uses block-wide reduction with the CUB library's <code>BlockLoad</code> and shared memory for synchronization.  </li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="problem-12-softmax-backward-20-points">Problem 1.2: Softmax Backward (20 points)</h3>
+<p>The gradient of the softmax function for a vector $<span class="arithmatex"><span class="MathJax_Preview">\( \mathbf{x} \)</span><script type="math/tex">\( \mathbf{x} \)</script></span>$ is given by:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\[
+\frac{\partial \text{softmax}(\mathbf{x})_i}{\partial x_j} = 
+\text{softmax}(\mathbf{x})_i (\delta_{ij} - \text{softmax}(\mathbf{x})_j)
+\]
+</div>
+<script type="math/tex; mode=display">
+\[
+\frac{\partial \text{softmax}(\mathbf{x})_i}{\partial x_j} = 
+\text{softmax}(\mathbf{x})_i (\delta_{ij} - \text{softmax}(\mathbf{x})_j)
+\]
+</script>
+</div>
+<p>where $<span class="arithmatex"><span class="MathJax_Preview">\( \delta_{ij} \)</span><script type="math/tex">\( \delta_{ij} \)</script></span>$ is the Kronecker delta.</p>
+<ol>
+<li>
+<p>Implement <code>launch_attn_softmax_bw</code> in <code>src/softmax_kernel.cu</code>:</p>
+<div class="language-cuda highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kt">void</span><span class="w"> </span><span class="n">launch_attn_softmax_bw</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">out_grad</span><span class="p">,</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">                                </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">soft_outp</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">rows</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">                                </span><span class="kt">int</span><span class="w"> </span><span class="n">softmax_len</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">                                </span><span class="n">cudaStream_t</span><span class="w"> </span><span class="n">stream</span><span class="p">)</span>
+</span></code></pre></div>
+<p>In lectures, we described the use of templates for tuning kernel parameters. When implementing <code>launch_attn_softmax_bw</code>, you should compute the <code>ITERATIONS</code> parameter of <code>ker_attn_softmax_bw</code> depending on different max sequence lengths in <code>{32, 64, 128, 256, 384, 512, 768, 1024, 2048}</code>.</p>
+<p><strong>Hint</strong>: Refer to the way templates are used in <code>launch_attn_softmax</code>.</p>
+<div class="language-cuda highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ITERATIONS</span><span class="o">&gt;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_attn_softmax_bw</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">grad</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Compile the CUDA file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&gt;&gt;&gt;<span class="w"> </span>nvcc<span class="w"> </span>-o<span class="w"> </span>minitorch/cuda_kernels/softmax_kernel.so<span class="w"> </span>--shared<span class="w"> </span>src/softmax_kernel.cu<span class="w"> </span>-Xcompiler<span class="w"> </span>-fPIC
+</span></code></pre></div>
+</li>
+<li>
+<p>Bind the kernel with miniTorch in <code>minitorch/cuda_kernel_ops.py</code>.</p>
+<p><strong>Hint</strong>: You should pass the CUDA stream to the function, define it with:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">stream_1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_stream</span><span class="p">()</span><span class="o">.</span><span class="n">cuda_stream</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CudaKernelOps</span><span class="p">(</span><span class="n">TensorOps</span><span class="p">):</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">attn_softmax_bw</span><span class="p">(</span><span class="n">out_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">soft_inp</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>And in <code>minitorch/tensor_functions.py</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Attn_Softmax</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">out_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Pass the test and notice an average speedup around <strong><em>5.5</em></strong> with our given default max lengths <code>{32, 64, 128, 256, 384, 512, 768, 1024, 2048}</code>. You can try other setups of max length and achieve a higher speedup, but it will not be graded.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>kernel_tests.test_softmax_bw
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="understanding-softmax-backward-kernel">Understanding Softmax Backward Kernel</h3>
+<p>The <code>ker_attn_softmax_bw</code> function is a CUDA kernel for computing the backward pass of the softmax function in self-attention mechanisms. Here are the steps:</p>
+<p><strong>Initialization</strong></p>
+<ul>
+<li>The function calculates the backward pass for each element in the gradient and the output of the softmax forward pass.</li>
+<li>The grid and block dimensions are configured based on the batch size, number of heads, and sequence length.</li>
+</ul>
+<p><strong>Gradient Calculation</strong></p>
+<ul>
+<li>The function iterates over the softmax length, with each thread handling a portion of the data.</li>
+<li>It loads the gradient and input (output of softmax forward) into registers.</li>
+<li>A local sum is computed for each thread, which is a key part of the gradient calculation for softmax.</li>
+</ul>
+<p><strong>Gradient Computation</strong></p>
+<ul>
+<li>The sum is shared across the warp using warp shuffle operations.</li>
+<li>The final gradient for each element is computed by modifying the forward pass output with the computed sum.</li>
+</ul>
+<hr />
+<h2 id="problem-2-layernorm-optimization-40-points">Problem 2: LayerNorm Optimization (40 points)</h2>
+<h3 id="problem-21-layernorm-forward-20-points">Problem 2.1: LayerNorm Forward (20 points)</h3>
+<p>LayerNorm normalizes the input $<span class="arithmatex"><span class="MathJax_Preview">\( \boldsymbol{x} \)</span><script type="math/tex">\( \boldsymbol{x} \)</script></span>$ by:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\[
+\boldsymbol{y}_{i} = \boldsymbol{\gamma}_{i} \cdot \frac{\boldsymbol{x}_{i} - \mu{(\boldsymbol{x})}}{\sigma{(\boldsymbol{x})}} + \boldsymbol{\beta}_{i},
+\]
+</div>
+<script type="math/tex; mode=display">
+\[
+\boldsymbol{y}_{i} = \boldsymbol{\gamma}_{i} \cdot \frac{\boldsymbol{x}_{i} - \mu{(\boldsymbol{x})}}{\sigma{(\boldsymbol{x})}} + \boldsymbol{\beta}_{i},
+\]
+</script>
+</div>
+<p>where $<span class="arithmatex"><span class="MathJax_Preview">\( \mu{(\boldsymbol{x})} \)</span><script type="math/tex">\( \mu{(\boldsymbol{x})} \)</script></span>$ and $<span class="arithmatex"><span class="MathJax_Preview">\( \sigma{(\boldsymbol{x})} \)</span><script type="math/tex">\( \sigma{(\boldsymbol{x})} \)</script></span>$ are the mean and the standard deviation of $<span class="arithmatex"><span class="MathJax_Preview">\( \boldsymbol{x} \)</span><script type="math/tex">\( \boldsymbol{x} \)</script></span>$ respectively, and $<span class="arithmatex"><span class="MathJax_Preview">\( \boldsymbol{\gamma} \)</span><script type="math/tex">\( \boldsymbol{\gamma} \)</script></span>$ and $<span class="arithmatex"><span class="MathJax_Preview">\( \boldsymbol{\beta} \)</span><script type="math/tex">\( \boldsymbol{\beta} \)</script></span>$ are the learnable affine transform parameters in LayerNorm.</p>
+<p>Noting that the equation above requires two reduction operations (mean and standard deviation), these cannot be computed in parallel. Speedup can be achieved by computing the standard deviation as:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\[
+\sigma{(\boldsymbol{x})} = \sqrt{\mu{(\boldsymbol{x}^{2})} - \mu{(\boldsymbol{x})}^{2} + \epsilon},
+\]
+</div>
+<script type="math/tex; mode=display">
+\[
+\sigma{(\boldsymbol{x})} = \sqrt{\mu{(\boldsymbol{x}^{2})} - \mu{(\boldsymbol{x})}^{2} + \epsilon},
+\]
+</script>
+</div>
+<p>where $<span class="arithmatex"><span class="MathJax_Preview">\( \epsilon = 1 \times 10^{-8} \) is a small value added to the variance for numerical stability. This approach allows concurrent computation of the means of \( \boldsymbol{x} \) and \( \boldsymbol{x}^{2} \)</span><script type="math/tex">\( \epsilon = 1 \times 10^{-8} \) is a small value added to the variance for numerical stability. This approach allows concurrent computation of the means of \( \boldsymbol{x} \) and \( \boldsymbol{x}^{2} \)</script></span>$.</p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>
+<p><strong>Implement the CUDA kernel of LayerNorm forward in <code>src/layernorm_kernel.cu</code>:</strong></p>
+<div class="language-cuda highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_layer_norm</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">ln_res</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">}</span>
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Compile the CUDA file:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>&gt;&gt;&gt;<span class="w"> </span>nvcc<span class="w"> </span>-o<span class="w"> </span>minitorch/cuda_kernels/layernorm_kernel.so<span class="w"> </span>--shared<span class="w"> </span>src/layernorm_kernel.cu<span class="w"> </span>-Xcompiler<span class="w"> </span>-fPIC
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Bind the kernel with miniTorch in <code>minitorch/cuda_kernel_ops.py</code>:</strong></p>
+<p><strong>Hint</strong>: You should pass the CUDA stream to the function, defining it as:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">stream_1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_stream</span><span class="p">()</span><span class="o">.</span><span class="n">cuda_stream</span>
+</span></code></pre></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CudaKernelOps</span><span class="p">(</span><span class="n">TensorOps</span><span class="p">):</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">layernorm_fw</span><span class="p">(</span><span class="n">inp</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">):</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>And in <code>minitorch/tensor_functions.py</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LayerNorm</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>        <span class="o">...</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>        <span class="k">return</span> <span class="n">out</span>
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Pass the test and notice an average speedup around $<span class="arithmatex"><span class="MathJax_Preview">\( 15.8\times \)</span><script type="math/tex">\( 15.8\times \)</script></span>$:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>kernel_tests/test_layernorm_fw.py
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="understanding-layernorm-forward-kernels">Understanding LayerNorm Forward Kernels</h3>
+<p>In this kernel, we use <code>float4</code> to speed up computations. This approach enhances performance when handling large datasets by processing multiple data elements simultaneously, leveraging the SIMD (Single Instruction, Multiple Data) parallelism inherent in GPUs.</p>
+<p>When using CUDA programming and <code>float4</code>, <code>reinterpret_cast</code> is required to convert between types. For example, in <code>src/layernorm_kernel.cu</code>, the sum of <span class="arithmatex"><span class="MathJax_Preview"> \boldsymbol{x} </span><script type="math/tex"> \boldsymbol{x} </script></span> in step 1 is computed as follows:</p>
+<ul>
+<li><code>reinterpret_cast</code> is used to convert a float array <code>inp</code> to a <code>float4</code> vector <code>inp_f4</code>.</li>
+<li>Each thread within a block calculates <code>l_sum</code> for its assigned elements in <code>inp_f4</code>.</li>
+</ul>
+<h3 id="algorithmic-steps_1">Algorithmic Steps</h3>
+<ol>
+<li>
+<p><strong>Compute the sums of <span class="arithmatex"><span class="MathJax_Preview"> \boldsymbol{x} </span><script type="math/tex"> \boldsymbol{x} </script></span> and <span class="arithmatex"><span class="MathJax_Preview"> \boldsymbol{x}^{2} </span><script type="math/tex"> \boldsymbol{x}^{2} </script></span>:</strong></p>
+<ul>
+<li>Use <code>reinterpret_cast</code> by casting to <code>float4</code> for speedup.</li>
+</ul>
+</li>
+<li>
+<p><strong>Perform reduction:</strong></p>
+<ul>
+<li>Compute the reduce sum with <code>blockReduce</code> and add epsilon (<code>LN_EPSILON</code>).</li>
+</ul>
+</li>
+<li>
+<p><strong>Compute the LayerNorm result:</strong></p>
+<ul>
+<li>Use <code>reinterpret_cast</code> to cast to <code>float4</code> for speedup.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h3 id="problem-22-layernorm-backward-20-points">Problem 2.2: LayerNorm Backward (20 points)</h3>
+<p>Let $<span class="arithmatex"><span class="MathJax_Preview">\(\hat{\boldsymbol{x}}_{i} = \frac{\boldsymbol{x}_{i} - \mu{(\boldsymbol{x})}}{\sigma{(\boldsymbol{x})}}\)</span><script type="math/tex">\(\hat{\boldsymbol{x}}_{i} = \frac{\boldsymbol{x}_{i} - \mu{(\boldsymbol{x})}}{\sigma{(\boldsymbol{x})}}\)</script></span>$, then the final gradient of $<span class="arithmatex"><span class="MathJax_Preview">\(\boldsymbol{x}_{i}\)</span><script type="math/tex">\(\boldsymbol{x}_{i}\)</script></span>$ can be re-written as:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\(\nabla{\boldsymbol{x}_{i}} = \frac{\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}}{\sigma{(\boldsymbol{x})}} - \frac{1}{m \sigma{(\boldsymbol{x})}} \left( \sum_{j}{\nabla{\boldsymbol{y}_{j}}\boldsymbol{\gamma}_{j}} + \hat{\boldsymbol{x}}_{i} \sum_{j}{\nabla{\boldsymbol{y}_{j}}\boldsymbol{\gamma}_{j}\hat{\boldsymbol{x}}_{j}} \right)\),
+</div>
+<script type="math/tex; mode=display">
+\(\nabla{\boldsymbol{x}_{i}} = \frac{\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}}{\sigma{(\boldsymbol{x})}} - \frac{1}{m \sigma{(\boldsymbol{x})}} \left( \sum_{j}{\nabla{\boldsymbol{y}_{j}}\boldsymbol{\gamma}_{j}} + \hat{\boldsymbol{x}}_{i} \sum_{j}{\nabla{\boldsymbol{y}_{j}}\boldsymbol{\gamma}_{j}\hat{\boldsymbol{x}}_{j}} \right)\),
+</script>
+</div>
+<p>where $<span class="arithmatex"><span class="MathJax_Preview">\(m\)</span><script type="math/tex">\(m\)</script></span>$ is the dimension of $<span class="arithmatex"><span class="MathJax_Preview">\(\boldsymbol{x}\)</span><script type="math/tex">\(\boldsymbol{x}\)</script></span>$, and $<span class="arithmatex"><span class="MathJax_Preview">\(\nabla{\boldsymbol{x}}\)</span><script type="math/tex">\(\nabla{\boldsymbol{x}}\)</script></span>$ and $<span class="arithmatex"><span class="MathJax_Preview">\(\nabla{\boldsymbol{y}}\)</span><script type="math/tex">\(\nabla{\boldsymbol{y}}\)</script></span>$ are the input and output gradients.<br />
+The speedup can be achieved by concurrently executing two batch reduction operations in the parentheses above.</p>
+<p>The gradients of $<span class="arithmatex"><span class="MathJax_Preview">\(\boldsymbol{\gamma}_{i}\)</span><script type="math/tex">\(\boldsymbol{\gamma}_{i}\)</script></span>$ and $<span class="arithmatex"><span class="MathJax_Preview">\(\boldsymbol{\beta}_{i}\)</span><script type="math/tex">\(\boldsymbol{\beta}_{i}\)</script></span>$ are:</p>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+\(\nabla{\boldsymbol{\gamma}_{i}} = \sum_{j}{\nabla{\boldsymbol{y}_{j}}\hat{\boldsymbol{x}}_{j}}, \quad
+\nabla{\boldsymbol{\beta}_{i}} = \sum_{j}{\nabla{\boldsymbol{y}_{j}}}\).
+</div>
+<script type="math/tex; mode=display">
+\(\nabla{\boldsymbol{\gamma}_{i}} = \sum_{j}{\nabla{\boldsymbol{y}_{j}}\hat{\boldsymbol{x}}_{j}}, \quad
+\nabla{\boldsymbol{\beta}_{i}} = \sum_{j}{\nabla{\boldsymbol{y}_{j}}}\).
+</script>
+</div>
+<hr />
+<h3 id="steps-to-implement">Steps to Implement</h3>
+<ol>
+<li>
+<p>Implement the CUDA kernel of LayerNorm backward in <code>src/layernorm_kernel.cu</code>:
+    <div class="language-cuda highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_ln_bw_dinp</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">inp_grad</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="p">}</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">ker_ln_bw_dgamma_dbetta</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="n">gamma_grad</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="p">}</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Compile the CUDA file:
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>&gt;&gt;&gt;<span class="w"> </span>nvcc<span class="w"> </span>-o<span class="w"> </span>minitorch/cuda_kernels/layernorm_kernel.so<span class="w"> </span>--shared<span class="w"> </span>src/layernorm_kernel.cu<span class="w"> </span>-Xcompiler<span class="w"> </span>-fPIC
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Bind the kernel with miniTorch in <code>minitorch/cuda_kernel_ops.py</code>:
+    Hint: Pass the CUDA stream to the function, defining it with:
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">stream_1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_stream</span><span class="p">()</span><span class="o">.</span><span class="n">cuda_stream</span>
+</span></code></pre></div>
+    Example implementation:
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CudaKernelOps</span><span class="p">(</span><span class="n">TensorOps</span><span class="p">):</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">layernorm_bw</span><span class="p">(</span><span class="n">out_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>        <span class="o">...</span>
+</span></code></pre></div>
+    Then integrate it in <code>minitorch/tensor_functions.py</code>:
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LayerNorm</span><span class="p">(</span><span class="n">Function</span><span class="p">):</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="nd">@staticmethod</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">out_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>        <span class="o">...</span>
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Pass the test and notice an average speedup of approximately <strong>3.7×</strong>:
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>kernel_tests/test_layernorm_bw.py
+</span></code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h3 id="understanding-layernorm-backward-kernels">Understanding LayerNorm Backward Kernels</h3>
+<h4 id="input-gradients">Input Gradients</h4>
+<p><strong>Initialization:</strong><br />
+Each thread is responsible for a specific element in the <code>inp_grad</code> array.</p>
+<p><strong>Algorithmic Steps:</strong></p>
+<ol>
+<li>Compute $<span class="arithmatex"><span class="MathJax_Preview">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\)</span><script type="math/tex">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\)</script></span>$ with <code>reinterpret_cast</code> by casting to <code>float4</code> for speedup.</li>
+<li>Compute $<span class="arithmatex"><span class="MathJax_Preview">\(\hat{\boldsymbol{x}}_{i}\)</span><script type="math/tex">\(\hat{\boldsymbol{x}}_{i}\)</script></span>$ with <code>reinterpret_cast</code> by casting to <code>float4</code> for speedup.</li>
+<li>Compute reduce sum for $<span class="arithmatex"><span class="MathJax_Preview">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\)</span><script type="math/tex">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\)</script></span>$ and $<span class="arithmatex"><span class="MathJax_Preview">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\hat{\boldsymbol{x}}_{i}\)</span><script type="math/tex">\(\nabla{\boldsymbol{y}_{i}}\boldsymbol{\gamma}_{i}\hat{\boldsymbol{x}}_{i}\)</script></span>$ with <code>blockReduce</code>.</li>
+<li>Compute final gradient.</li>
+</ol>
+<hr />
+<h4 id="gamma-and-beta-gradients">Gamma and Beta Gradients</h4>
+<p><strong>Initialization:</strong><br />
+Shared memory arrays <code>betta_buffer</code> and <code>gamma_buffer</code> are declared to store intermediate results within the thread block.<br />
+CUDA thread blocks <code>cg::thread_block</code> and thread block tiles <code>cg::thread_block_tile</code> are used to organize threads.</p>
+<p><strong>Loop Over Rows:</strong><br />
+Threads in the y-dimension loop over rows, calculating partial gradients for each row based on the given inputs (<code>out_grad</code>, <code>inp</code>, <code>means</code>, <code>vars</code>).</p>
+<p><strong>Shared Memory Storage:</strong><br />
+The computed partial gradient values are stored in shared memory arrays <code>betta_buffer</code> and <code>gamma_buffer</code> in a tiled manner.</p>
+<p><strong>Reduction within Thread Block:</strong><br />
+Threads cooperate to perform a reduction operation on <code>betta_buffer</code> and <code>gamma_buffer</code> using <code>g.shfl_down</code> (shuffle down) operations along <code>threadIdx.y</code>.<br />
+This approach avoids bank conflicts and improves warp-level parallelism.</p>
+<p><strong>Final Result Assignment:</strong><br />
+The final reduction result is assigned to the appropriate positions in the global output arrays (<code>gamma_grad</code> and <code>betta_grad</code>).</p>
+<p><strong>Algorithmic Steps:</strong></p>
+<ol>
+<li>Compute the partial gradients by looping across <code>inp</code> rows.</li>
+<li>Store the partial gradients in the shared memory arrays.</li>
+<li>Compute the reduce sum of the shared memory arrays with <code>g.shfl_down</code>.</li>
+<li>Assign the final result to the correct position in the global output.</li>
+</ol>
+<p>More hints about <code>g.shfl_down</code>:
+Read 
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>https://developer.nvidia.com/blog/cooperative-groups/#:~:text=Using%20thread_block_tile%3A%3Ashfl_down()%20to%20simplify%20our%20warp%2Dlevel%20reduction%20does%20benefit%20our%20code%3A%20it%20simplifies%20it%20and%20eliminates%20the%20need%20for%20shared%20memory.
+</span></code></pre></div>
+The highlighted line gives you a conceptual understanding of what the <code>g.shfl_down</code> is doing. Usually, the threads inside a block need to load everything to shared memory and work together to reduce the result (like what you have implemented in the hw1 for reduce function). 
+Now <code>g.shfl_down</code> helps you do so without consuming any shared memory. <code>g.shfl_down</code> makes it more efficient.</p>
+<hr />
+<h2 id="problem-3-adopt-fused-kernels-in-transformer-20-points">Problem 3: Adopt Fused Kernels in Transformer (20 points)</h2>
+<p>The improved CUDA kernels are now bound with the miniTorch library.<br />
+Integrate the improved CUDA kernels into the transformer from Assignment 3.</p>
+<ol>
+<li>Replace the softmax and layernorm operations in <code>MultiHeadAttention</code>, <code>TransformerLayer</code>, and <code>DecoderLM</code> with your accelerated kernels in <code>minitorch/modules_transfomer.py</code>.</li>
+<li>Train the transformer for one epoch, with and without using the fused kernel, and record the running time:
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>project/run_machine_translation.py<span class="w"> </span>--use-fused-kernel<span class="w"> </span>False
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>project/run_machine_translation.py<span class="w"> </span>--use-fused-kernel<span class="w"> </span>True
+</span></code></pre></div></li>
+<li>According to Amdahl's law, the improvement should not be significant since only softmax and layernorm are improved. However, you should still notice an average speedup of approximately <strong>1.1×</strong>.</li>
+</ol>
+<hr />
+<h2 id="submission">Submission</h2>
+<p>Please submit the entire <code>llmsys_hw4</code> folder as a zip file on Canvas. Include a screenshot of your terminal showing the running time of a single epoch of training both with and without your custom fused kernels.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

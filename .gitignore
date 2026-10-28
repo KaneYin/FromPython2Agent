@@ -1,0 +1,66 @@
+# ---- macOS ----
+.DS_Store
+._*
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---- 密钥 ----
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# ---- 本机工具配置 / 终端状态 ----
+.claude/settings.local.json
+.cmuxterm/
+
+# ---- JavaScript 依赖 (参考实现各自安装) ----
+node_modules/
+
+# ---- 课程讲义 / 论文 (可从课程主页重新下载, 约 483MB) ----
+*.pdf
+
+# ---- 测试数据 / 数据集 / 模型权重 (从上游仓库 clone 而来, 可重新获取) ----
+*.npy
+*.npz
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+*.h5
+
+# wikitext 等随仓库附带的语料
+90_resources/courses/cmu/11_868_llm_systems/repos/*/data/
+90_resources/courses/cmu/11_868_llm_systems/repos/*/*/data/
+
+# ---- 大体积演示动图 ----
+*.gif
+
+# ---- 日志 / 临时产物 ----
+*.log
+wandb/
+outputs/
+checkpoints/
+
+# ---- HW1 的 chess_app: 必须保留自己的 .git ----
+# src/assignment/utils/image.py 的 verify_source() 会校验它的 HEAD == task.json
+# 的 base_commit (4aaabca) 且工作区干净, 没有 .git 就直接 SourceMismatch。
+# 因此它是唯一保留的嵌套仓库, 由顶层忽略、不纳入跟踪。
+# ASSIGNMENT.md:378 亦要求提交时不包含 submodule 内容。
+90_resources/courses/cmu/11_768_ai_agents/Homework/HW1/chess_app/

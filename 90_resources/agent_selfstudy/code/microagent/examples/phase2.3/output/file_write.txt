@@ -1,0 +1,29 @@
+============================================================
+  Case: file_write
+  Query: 创建一个文件 hello.txt，内容是 'Hello MicroAgent'
+============================================================
+
+  Step 1 — Tool Calls:
+    file_write({"content": "Hello MicroAgent", "path": "hello.txt"})
+  Step 1 — Action: file_write({"content": "Hello MicroAgent", "path": "hello.txt"})
+  Step 1 — Observation:
+    Written 16 bytes to hello.txt
+  Step 2 — Tool Calls:
+    file_read({"path": "hello.txt"})
+  Step 2 — Action: file_read({"path": "hello.txt"})
+  Step 2 — Observation:
+    Hello MicroAgent
+  Step 3 — Final Answer:
+    文件 `hello.txt` 已创建成功，内容为：
+    
+    ```
+    Hello MicroAgent
+    ```
+
+  Result: PASS
+  Steps: 3  |  Tokens: 3236  |  Latency: 5250ms  |  Wall: 5.3s
+  Answer: 文件 `hello.txt` 已创建成功，内容为：
+
+```
+Hello MicroAgent
+```

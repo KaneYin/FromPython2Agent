@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MicroAgent Log Viewer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; display: flex; height: 100vh; }
+/* Sidebar */
+.sidebar { width: 260px; background: #161b22; border-right: 1px solid #30363d; padding: 20px 0; flex-shrink: 0; display: flex; flex-direction: column; }
+.sidebar h2 { padding: 0 20px 16px; font-size: 16px; color: #58a6ff; border-bottom: 1px solid #30363d; }
+.sidebar ul { list-style: none; overflow-y: auto; flex: 1; }
+.sidebar li { padding: 10px 20px; cursor: pointer; font-size: 13px; color: #8b949e; border-left: 3px solid transparent; transition: all .15s; }
+.sidebar li:hover { background: #1c2128; color: #c9d1d9; }
+.sidebar li.active { background: #1c2128; color: #58a6ff; border-left-color: #58a6ff; }
+/* Main */
+.main { flex: 1; overflow-y: auto; padding: 24px 32px; }
+.header { margin-bottom: 24px; }
+.header h1 { font-size: 22px; color: #e6edf3; margin-bottom: 8px; }
+.header .meta { font-size: 13px; color: #8b949e; }
+/* Card */
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+.card-header { padding: 14px 18px; background: #1c2128; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.card-header:hover { background: #22272e; }
+.card-title { font-size: 14px; font-weight: 600; color: #e6edf3; }
+.card-meta { font-size: 12px; color: #8b949e; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+.badge-stop { background: #238636; color: #fff; }
+.badge-length { background: #da3633; color: #fff; }
+.badge-other { background: #6e7681; color: #fff; }
+.badge-tool { background: #f0883e; color: #fff; }
+.card-body { padding: 0; }
+/* Section */
+.section { border-top: 1px solid #30363d; }
+.section-header { padding: 10px 18px; font-size: 13px; font-weight: 600; color: #58a6ff; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 6px; }
+.section-header:hover { background: #1c2128; }
+.section-header .arrow { transition: transform .15s; font-size: 10px; }
+.section-header.collapsed .arrow { transform: rotate(-90deg); }
+.section-content { padding: 12px 18px; }
+.section-content.hidden { display: none; }
+/* Code */
+pre { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 14px; overflow-x: auto; font-size: 12px; line-height: 1.5; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; white-space: pre-wrap; word-break: break-all; }
+.msg-role { color: #58a6ff; font-weight: 700; }
+.msg-content { color: #c9d1d9; }
+/* Stats */
+.stats { display: flex; gap: 24px; padding: 12px 18px; background: #1c2128; }
+.stat { text-align: center; }
+.stat-value { font-size: 18px; font-weight: 700; color: #58a6ff; }
+.stat-label { font-size: 11px; color: #8b949e; margin-top: 2px; }
+/* Empty */
+.empty { text-align: center; padding: 80px 20px; color: #484f58; }
+.empty h3 { font-size: 18px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <h2>Log Files</h2>
+  <ul id="fileList"></ul>
+</div>
+<div class="main" id="main">
+  <div class="empty" id="emptyState">
+    <h3>Select a log file to view</h3>
+    <p>Click a file from the sidebar</p>
+  </div>
+  <div id="content" style="display:none"></div>
+</div>
+<script>
+async function loadFiles() {
+  const resp = await fetch('/api/files');
+  const files = await resp.json();
+  const ul = document.getElementById('fileList');
+  ul.innerHTML = '';
+  files.forEach(f => {
+    const li = document.createElement('li');
+    li.textContent = f;
+    li.onclick = () => selectFile(f, li);
+    ul.appendChild(li);
+  });
+}
+async function selectFile(name, li) {
+  document.querySelectorAll('#fileList li').forEach(el => el.classList.remove('active'));
+  li.classList.add('active');
+  const resp = await fetch('/api/log?file=' + encodeURIComponent(name));
+  const entries = await resp.json();
+  renderEntries(entries, name);
+}
+function renderEntries(entries, fileName) {
+  document.getElementById('emptyState').style.display = 'none';
+  const el = document.getElementById('content');
+  el.style.display = 'block';
+  const totalTokens = entries.reduce((s, e) => s + (e.usage?.prompt_tokens||0) + (e.usage?.completion_tokens||0), 0);
+  const totalLatency = entries.reduce((s, e) => s + (e.latency_ms||0), 0);
+  let html = `<div class="header"><h1>${fileName}</h1>
+    <div class="meta">${entries.length} entries | ${totalTokens} tokens | ${totalLatency.toFixed(0)}ms total</div></div>`;
+  entries.forEach((e, i) => {
+    if (e.type === 'tool_call') {
+      html += renderToolCard(e, i);
+    } else {
+      html += renderLLMCard(e, i);
+    }
+  });
+  el.innerHTML = html;
+}
+function renderLLMCard(e, i) {
+  const badge = e.finish_reason === 'stop' ? 'badge-stop'
+    : e.finish_reason === 'length' ? 'badge-length' : 'badge-other';
+  const msgCount = (e.messages||[]).length;
+  return `<div class="card">
+    <div class="card-header" onclick="toggleCard(this)" style="border-left:3px solid #58a6ff">
+      <span class="card-title">LLM Call #${i+1} <span class="badge ${badge}">${e.finish_reason||'?'}</span></span>
+      <span class="card-meta">${e.time_str||''} | ${e.latency_ms?.toFixed(0)||0}ms | ${e.model||''}</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-value">${e.usage?.prompt_tokens||0}</div><div class="stat-label">Prompt</div></div>
+      <div class="stat"><div class="stat-value">${e.usage?.completion_tokens||0}</div><div class="stat-label">Completion</div></div>
+      <div class="stat"><div class="stat-value">${e.usage?.total_tokens||0}</div><div class="stat-label">Total</div></div>
+      <div class="stat"><div class="stat-value">${e.latency_ms?.toFixed(0)||0}</div><div class="stat-label">Latency(ms)</div></div>
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="section-header collapsed" onclick="toggleSection(this)">
+          <span class="arrow">&#9660;</span> REQUEST — ${msgCount} messages
+        </div>
+        <div class="section-content hidden">${renderMessages(e.messages||[])}</div>
+      </div>
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="arrow">&#9660;</span> RESPONSE
+        </div>
+        <div class="section-content"><pre>${esc(e.content||'')}</pre></div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderToolCard(e, i) {
+  return `<div class="card">
+    <div class="card-header" onclick="toggleCard(this)" style="border-left:3px solid #f0883e">
+      <span class="card-title">Tool Call #${i+1} <span class="badge badge-tool">${e.tool_name||''}</span></span>
+      <span class="card-meta">${e.time_str||''}</span>
+    </div>
+    <div class="card-body">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="arrow">&#9660;</span> INPUT
+        </div>
+        <div class="section-content"><pre>${esc(JSON.stringify(e.tool_input||{},null,2))}</pre></div>
+      </div>
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="arrow">&#9660;</span> OUTPUT
+        </div>
+        <div class="section-content"><pre>${esc(e.tool_output||'')}</pre></div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderMessages(msgs) {
+  if (!msgs.length) return '<pre>(empty)</pre>';
+  let out = '';
+  msgs.forEach(m => {
+    const c = m.content || '';
+    out += `<div style="margin-bottom:10px"><span class="msg-role">[${m.role}]</span>\n<span class="msg-content">${esc(c)}</span></div>`;
+  });
+  return `<pre>${out}</pre>`;
+}
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toggleCard(h) { const body = h.parentElement.querySelector('.card-body'); body.style.display = body.style.display === 'none' ? '' : 'none'; }
+function toggleSection(h) { h.classList.toggle('collapsed'); h.nextElementSibling.classList.toggle('hidden'); }
+loadFiles();
+</script>
+</body>
+</html>

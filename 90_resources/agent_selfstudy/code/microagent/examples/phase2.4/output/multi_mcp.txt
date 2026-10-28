@@ -1,0 +1,26 @@
+============================================================
+  Case: multi_mcp
+  Query: 先用 echo 说一句 'MCP works'，再用 add 算 999 加 1
+============================================================
+
+  Step 1 — Tool Calls:
+    mock_echo({"text": "MCP works"})
+    mock_add({"a": 999, "b": 1})
+  Step 1 — Action: mock_echo({"text": "MCP works"})
+  Step 1 — Observation:
+    Echo: MCP works
+  Step 1 — Action: mock_add({"a": 999, "b": 1})
+  Step 1 — Observation:
+    1000
+  Step 2 — Final Answer:
+    结果如下：
+    
+    1. **Echo**: MCP works
+    2. **Add**: 999 + 1 = 1000
+
+  Result: PASS
+  Steps: 2  |  Tokens: 862  |  Latency: 8282ms  |  Wall: 8.3s
+  Answer: 结果如下：
+
+1. **Echo**: MCP works
+2. **Add**: 999 + 1 = 1000

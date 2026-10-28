@@ -1,0 +1,1717 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://llmsystem.github.io/llmsystemhomework/assignment_3/">
+      
+      
+        <link rel="prev" href="../assignment_2/">
+      
+      
+        <link rel="next" href="../assignment_4/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Assignment 3: Transformer Architecture - CMU 11868 LLM Systems Assignments</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#assignment-3-transformer-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-header__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CMU 11868 LLM Systems Assignments
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Assignment 3: Transformer Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-nav__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CMU 11868 LLM Systems Assignments
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 1: CUDA Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 2: Minitorch Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 3: Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 3: Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#homework-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Homework Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-your-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up Your Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up Your Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-copy-files-from-assignment-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Copy Files from Assignment 1 &amp; 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-copy-functions-from-assignment-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Copy Functions from Assignment 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-compile-cuda-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Compile CUDA Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementing-a-decoder-only-transformer-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing a Decoder-only Transformer Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-implementing-tensor-functions-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Implementing Tensor Functions (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Implementing Tensor Functions (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#softmax-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Softmax Loss Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-implementing-basic-modules-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: Implementing Basic Modules (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: Implementing Basic Modules (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-3-implementing-a-decoder-only-transformer-language-model-40-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3: Implementing a Decoder-only Transformer Language Model (40 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 3: Implementing a Decoder-only Transformer Language Model (40 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiheadattention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MultiHeadAttention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedforward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FeedForward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transformerlayer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TransformerLayer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decoderlm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DecoderLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-4-machine-translation-pipeline-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 4: Machine Translation Pipeline (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 4: Machine Translation Pipeline (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-generate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. generate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. generate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FQA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FQA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-aborted-core-dumped-due-to-nvcc-and-nvidia-driver-incompatibility-with-pytorch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Aborted (core dumped) due to nvcc and NVIDIA Driver Incompatibility with PyTorch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q1: Aborted (core dumped) due to nvcc and NVIDIA Driver Incompatibility with PyTorch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-downgrade-cuda-and-avoid-core-dump-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution: Downgrade CUDA and Avoid Core Dump Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution: Downgrade CUDA and Avoid Core Dump Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-uninstall-any-existing-pytorch-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Uninstall Any Existing PyTorch Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-load-cuda-121-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Load CUDA 12.1 Module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-pytorch-for-cuda-121" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install PyTorch for CUDA 12.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-oserror-errno-122-disk-quota-exceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: OSError: [Errno 122] Disk quota exceeded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-in-problem-3-pass-the-forward-pass-tests-but-fail-the-gradient-assertions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: In Problem 3, pass the forward pass tests, but fail the gradient assertions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 4: Transformer CUDA Acceleration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 5: Distributed Training and Parallelism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 6: Advanced Training and Inference Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 7: Introduction to RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#homework-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Homework Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-your-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up Your Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting up Your Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-copy-files-from-assignment-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Copy Files from Assignment 1 &amp; 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-copy-functions-from-assignment-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Copy Functions from Assignment 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-compile-cuda-kernels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Compile CUDA Kernels
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementing-a-decoder-only-transformer-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing a Decoder-only Transformer Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-implementing-tensor-functions-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Implementing Tensor Functions (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Implementing Tensor Functions (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#softmax-loss-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Softmax Loss Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-implementing-basic-modules-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: Implementing Basic Modules (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: Implementing Basic Modules (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-3-implementing-a-decoder-only-transformer-language-model-40-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3: Implementing a Decoder-only Transformer Language Model (40 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 3: Implementing a Decoder-only Transformer Language Model (40 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiheadattention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MultiHeadAttention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feedforward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FeedForward
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transformerlayer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TransformerLayer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decoderlm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DecoderLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-implementation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-4-machine-translation-pipeline-20-pts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 4: Machine Translation Pipeline (20 pts)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 4: Machine Translation Pipeline (20 pts)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-generate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. generate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. generate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fqa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FQA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FQA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q1-aborted-core-dumped-due-to-nvcc-and-nvidia-driver-incompatibility-with-pytorch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q1: Aborted (core dumped) due to nvcc and NVIDIA Driver Incompatibility with PyTorch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Q1: Aborted (core dumped) due to nvcc and NVIDIA Driver Incompatibility with PyTorch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solution-downgrade-cuda-and-avoid-core-dump-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution: Downgrade CUDA and Avoid Core Dump Errors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution: Downgrade CUDA and Avoid Core Dump Errors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-uninstall-any-existing-pytorch-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Uninstall Any Existing PyTorch Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-load-cuda-121-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Load CUDA 12.1 Module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-pytorch-for-cuda-121" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install PyTorch for CUDA 12.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Verify Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q2-oserror-errno-122-disk-quota-exceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q2: OSError: [Errno 122] Disk quota exceeded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q3-in-problem-3-pass-the-forward-pass-tests-but-fail-the-gradient-assertions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q3: In Problem 3, pass the forward pass tests, but fail the gradient assertions.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="assignment-3-transformer-architecture">Assignment 3: Transformer Architecture</h1>
+<p>We will continue adding modules to miniTorch framework. 
+In this assignment, students will implement a decoder-only transformer architecture (GPT-2), train it on machine translation task (IWSLT14 German-English), and benchmark their implementation.</p>
+<p><strong>Note: You may need to spend at least 10 hours for the training process for Problem 4. Make sure you have enough time to complete the assignment.</strong></p>
+<h2 id="homework-setup">Homework Setup</h2>
+<p>The starting code base is provided in <a href="https://github.com/llmsystem/llmsys_hw3">llmsys_hw3</a>.</p>
+<h2 id="setting-up-your-code">Setting up Your Code</h2>
+<h3 id="step-1-install-requirements">Step 1: Install Requirements</h3>
+<p>Ensure you have Python 3.12+ installed. Install the required dependencies with the following commands:</p>
+<p>Run the following command:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/llmsystem/llmsys_hw3.git
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>llmsys_hw3
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># load the CUDA module</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>module<span class="w"> </span>load<span class="w"> </span>cuda/12.4.0
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># create a virtual environment and activate it</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="o">=</span><span class="m">3</span>.12
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># install the requirements</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.extra.txt
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># install miniTorch in editable mode</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</span></code></pre></div>
+<h3 id="step-2-copy-files-from-assignment-1-2">Step 2: Copy Files from Assignment 1 &amp; 2</h3>
+<p>Copy the following files to the specified locations:</p>
+<ul>
+<li><code>llmsys_hw2/minitorch/autodiff.py</code> → <code>minitorch/autodiff.py</code></li>
+<li><code>llmsys_hw2/project/run_sentiment.py</code> → <code>project/run_sentiment_linear.py</code></li>
+</ul>
+<p><strong>Note</strong>: The suffix for the sentiment file is slightly different: <code>"_linear"</code>.</p>
+<h3 id="step-3-copy-functions-from-assignment-1">Step 3: Copy Functions from Assignment 1</h3>
+<p>Extract and transfer <code>only</code> the implementations of the following functions from <code>llmsys_hw1/src/combine.cu</code> to <code>src/combine.cu</code>:</p>
+<ul>
+<li><code>MatrixMultiplyKernel</code></li>
+<li><code>mapKernel</code></li>
+<li><code>zipKernel</code></li>
+<li><code>reduceKernel</code></li>
+</ul>
+<p><strong>Reasons for the copy:</strong>
+We have made some changes in <code>combine.cu</code> and <code>cuda_kernel_ops.py</code> for Assignment 3 compared with Assignment 2 :</p>
+<ul>
+<li>GPU memory allocation, deallocation, and memory copying operations have been relocated from <code>cuda_kernel_ops.py</code> to <code>combine.cu</code>, covering both host-to-device and device-to-host transfers.</li>
+<li>The datatype for <code>Tensor._tensor._storage</code> has been changed from <code>numpy.float64</code> to <code>numpy.float32</code>.</li>
+</ul>
+<h3 id="step-5-compile-cuda-kernels">Step 5: Compile CUDA Kernels</h3>
+<p>Compile your CUDA kernels by running:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bash<span class="w"> </span>compile_cuda.sh
+</span></code></pre></div>
+<hr />
+<h2 id="implementing-a-decoder-only-transformer-model">Implementing a Decoder-only Transformer Model</h2>
+<p>You will be implementing a Decoder-only Transformer model in <code>minitorch/transformer.py.py</code>. This will require you to first implement additional modules in <code>minitorch/modules_basic.py</code>, similar to the Linear module from Assignment 2.</p>
+<p>We will recreate the GPT-2 architecture as described in <a href="https://paperswithcode.com/paper/language-models-are-unsupervised-multitask">Language Models are Unsupervised Multitask Learners</a>.</p>
+<p><strong>Please read the following implementation details section before starting.</strong></p>
+<h2 id="problem-1-implementing-tensor-functions-20-pts">Problem 1: Implementing Tensor Functions (20 pts)</h2>
+<p>You need to implement the following functions in <code>minitorch/nn.py</code> (highlighted with <code>BEGIN ASSIGN3_1</code> and <code>END ASSIGN3_1</code>)</p>
+<ul>
+<li><strong><code>logsumexp</code></strong></li>
+<li><strong><code>softmax_loss</code></strong>  </li>
+</ul>
+<p>The formula for the softmax loss (softmax + cross-entropy) is:<br />
+  $$
+\ell(z, y) = \log\left(\sum_{i=1}^k \exp(z_i)\right) - z_y
+  $$</p>
+<p>Refer to Lecture Slides for more details.</p>
+<h3 id="softmax-loss-function">Softmax Loss Function</h3>
+<p>The input to the softmax loss(softmax + cross entropy) function consists of:</p>
+<ul>
+<li><strong><code>logits</code></strong>: A (minibatch, C) tensor, where each row represents a sample containing raw logits before applying softmax.</li>
+<li><strong><code>target</code></strong>: A (minibatch,) tensor, where each row corresponds to the class of a sample.  </li>
+</ul>
+<p>You should utilize a combination of <code>logsumexp</code>, <code>one_hot</code>, and other tensor functions to compute this efficiently. (Our solution is only 3 lines long.)</p>
+<p><strong>Note</strong>:<br />
+The function should return results without setting <a href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html"><code>reduction=None</code></a>. The resulting output shape should be (minibatch,).</p>
+<h3 id="check-implementation">Check implementation</h3>
+<p>After correctly implementing the functions, you should be able to pass tests marked as
+logsumexp and softmax_loss by running:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_logsumexp_student"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_softmax_loss_student"</span>
+</span></code></pre></div></p>
+<h2 id="problem-2-implementing-basic-modules-20-pts">Problem 2: Implementing Basic Modules (20 pts)</h2>
+<p>Here are the modules you need to implement in <code>minitorch/modules_basic.py</code> (highlighted with <code>BEGIN ASSIGN3_2</code> and <code>END ASSIGN3_2</code>):</p>
+<ol>
+<li>
+<p><strong><code>Linear</code></strong>: You can use your implementation from Assignment 2 but adapt it slightly to account for the new <code>backend</code> argument.</p>
+</li>
+<li>
+<p><strong><code>Dropout</code></strong>: Applies dropout.<br />
+<strong>Note</strong>: If the flag <code>self.training</code> is false, do not zero out any values in the input tensor. To match the autograder seed, please use <code>np.random.binomial</code> to generate a mask.</p>
+</li>
+<li>
+<p><strong><code>LayerNorm1d</code></strong>: Applies layer normalization to a 2D tensor.</p>
+</li>
+<li>
+<p><strong><code>Embedding</code></strong>: Maps one-hot word vectors from a dictionary of fixed size to embeddings.</p>
+</li>
+</ol>
+<h3 id="check-implementation_1">Check implementation</h3>
+<p>After correctly implementing the functions, you should be able to pass tests marked as
+linear, dropout, layernorm, and embedding by running:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_linear_student"</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_dropout_student"</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_layernorm_student"</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_embedding_student"</span>
+</span></code></pre></div></p>
+<h2 id="problem-3-implementing-a-decoder-only-transformer-language-model-40-pts">Problem 3: Implementing a Decoder-only Transformer Language Model (40 pts)</h2>
+<p>Finally, you'll implement the GPT-2 architecture in <code>minitorch/transformer.py</code>, utilizing four modules and your earlier work (highlighted with <code>BEGIN ASSIGN3_3</code> and <code>END ASSIGN3_3</code>):</p>
+<ul>
+<li><strong><code>MultiHeadAttention</code></strong>: Implements masked multi-head attention.</li>
+<li><strong><code>FeedForward</code></strong>: Implements the feed-forward operation. [We have implemented this for you.]</li>
+<li><strong><code>TransformerLayer</code></strong>: Implements a transformer layer with the pre-LN architecture.</li>
+<li><strong><code>DecoderLM</code></strong>: Implements the full model with input and positional embeddings.</li>
+</ul>
+<h3 id="multiheadattention">MultiHeadAttention</h3>
+<p>GPT-2 implements multi-head attention, meaning each <span class="arithmatex"><span class="MathJax_Preview">\(K, Q, V\)</span><script type="math/tex">\(K, Q, V\)</script></span> tensor formed from <span class="arithmatex"><span class="MathJax_Preview">\(X\)</span><script type="math/tex">\(X\)</script></span> is partitioned into <span class="arithmatex"><span class="MathJax_Preview">\(h\)</span><script type="math/tex">\(h\)</script></span> heads. The self-attention operation is performed for each batch and head, and the output is reshaped to the correct shape. The final output is passed through an output projection layer.</p>
+<ol>
+<li>
+<p>Projecting <span class="arithmatex"><span class="MathJax_Preview">\(X\)</span><script type="math/tex">\(X\)</script></span> into <span class="arithmatex"><span class="MathJax_Preview">\(Q, K^T, V\)</span><script type="math/tex">\(Q, K^T, V\)</script></span> in the <code>project_to_query_key_value</code> function.</p>
+<p>In the <code>project_to_query_key_value</code> function, the <span class="arithmatex"><span class="MathJax_Preview">\(K, Q, V\)</span><script type="math/tex">\(K, Q, V\)</script></span> matrices are formed by projecting the input <span class="arithmatex"><span class="MathJax_Preview">\(X \in R^{B×S×D}\)</span><script type="math/tex">\(X \in R^{B×S×D}\)</script></span> where <span class="arithmatex"><span class="MathJax_Preview">\(B\)</span><script type="math/tex">\(B\)</script></span> is the batch size, <span class="arithmatex"><span class="MathJax_Preview">\(S\)</span><script type="math/tex">\(S\)</script></span> is the sequence length, and <span class="arithmatex"><span class="MathJax_Preview">\(D\)</span><script type="math/tex">\(D\)</script></span> the hidden dimension. Formally, let <span class="arithmatex"><span class="MathJax_Preview">\(h\)</span><script type="math/tex">\(h\)</script></span> be the number of heads, <span class="arithmatex"><span class="MathJax_Preview">\(D\)</span><script type="math/tex">\(D\)</script></span> be the dimension of the input, and <span class="arithmatex"><span class="MathJax_Preview">\(D_h\)</span><script type="math/tex">\(D_h\)</script></span> be the dimension of each head where <span class="arithmatex"><span class="MathJax_Preview">\(D = h × D_h\)</span><script type="math/tex">\(D = h × D_h\)</script></span>:</p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">\(X \in R^{B×S×D}\)</span><script type="math/tex">\(X \in R^{B×S×D}\)</script></span> gets projected to <span class="arithmatex"><span class="MathJax_Preview">\(Q, K, V \in R^{B×S×D}\)</span><script type="math/tex">\(Q, K, V \in R^{B×S×D}\)</script></span> <em>(Note: We could actually do this with a single layer and split the output into 3.)</em></li>
+<li><span class="arithmatex"><span class="MathJax_Preview">\(Q \in R^{B×S×(h×D_h)}\) gets unraveled to \(Q \in R^{B×S×h×D_h}\)</span><script type="math/tex">\(Q \in R^{B×S×(h×D_h)}\) gets unraveled to \(Q \in R^{B×S×h×D_h}\)</script></span></li>
+<li><span class="arithmatex"><span class="MathJax_Preview">\(Q \in R^{B×S×h×D_h}\)</span><script type="math/tex">\(Q \in R^{B×S×h×D_h}\)</script></span> gets permuted to <span class="arithmatex"><span class="MathJax_Preview">\(Q \in R^{B×h×S×D_h}\)</span><script type="math/tex">\(Q \in R^{B×h×S×D_h}\)</script></span></li>
+</ul>
+<p>Note: You'll do the same for the <span class="arithmatex"><span class="MathJax_Preview">\(V\)</span><script type="math/tex">\(V\)</script></span> matrix and take care to transpose <span class="arithmatex"><span class="MathJax_Preview">\(K\)</span><script type="math/tex">\(K\)</script></span> along the last two dimensions.</p>
+</li>
+<li>
+<p>Computing Self-Attention</p>
+<p>Let <span class="arithmatex"><span class="MathJax_Preview">\(Q_i\)</span><script type="math/tex">\(Q_i\)</script></span>, <span class="arithmatex"><span class="MathJax_Preview">\(K_i\)</span><script type="math/tex">\(K_i\)</script></span>, <span class="arithmatex"><span class="MathJax_Preview">\(V_i\)</span><script type="math/tex">\(V_i\)</script></span> be the Queries, Keys, and Values for head <span class="arithmatex"><span class="MathJax_Preview">\(i\)</span><script type="math/tex">\(i\)</script></span>. You'll need to compute:
+$$
+\text{softmax}\left(\dfrac{Q_iK_i^T}{\sqrt{D_h}} + M\right)V_i
+$$
+with batched matrix multiplication (which we've implemented for you) across each batch and head. <span class="arithmatex"><span class="MathJax_Preview">\(M\)</span><script type="math/tex">\(M\)</script></span> is the causal mask added to prevent your transformer from attending to positions in the future, which is crucial in an auto-regressive language model.</p>
+<p>Before returning, let <span class="arithmatex"><span class="MathJax_Preview">\(A \in R^{B×h×S×D_h}\)</span><script type="math/tex">\(A \in R^{B×h×S×D_h}\)</script></span> denote the output of self-attention. You'll need to:</p>
+<ul>
+<li>Permute <span class="arithmatex"><span class="MathJax_Preview">\(A\)</span><script type="math/tex">\(A\)</script></span> to <span class="arithmatex"><span class="MathJax_Preview">\(A \in R^{B×S×h×D_h}\)</span><script type="math/tex">\(A \in R^{B×S×h×D_h}\)</script></span></li>
+<li>Reshape <span class="arithmatex"><span class="MathJax_Preview">\(A\)</span><script type="math/tex">\(A\)</script></span> to <span class="arithmatex"><span class="MathJax_Preview">\(A \in R^{B×S×D}\)</span><script type="math/tex">\(A \in R^{B×S×D}\)</script></span></li>
+</ul>
+</li>
+<li>
+<p>Finally pass self-attention output through the out projection layer</p>
+</li>
+</ol>
+<hr />
+<h3 id="feedforward">FeedForward</h3>
+<p>We have implemented the feed-forward module for you. The feed-forward module consists of two linear layers with an activation in between. You can go through the implementation for reference.</p>
+<hr />
+<h3 id="transformerlayer">TransformerLayer</h3>
+<p>Combine the MultiHeadAttention and FeedForward modules to form one transformer layer. GPT-2 employs the <strong>pre-LN architecture</strong> (pre-layer normalization). Follow the <strong>pre-LN variant</strong> shown below:</p>
+<p><img alt="Transformer Layer Normalization" src="../hw3/ln_transformers.png" /><br />
+<em>(a) Post-LN Transformer layer; (b) Pre-LN Transformer layer.</em>  </p>
+<p>For more details, refer to <a href="https://arxiv.org/pdf/2002.04745.pdf">On Layer Normalization in the Transformer Architecture</a>.</p>
+<hr />
+<h3 id="decoderlm">DecoderLM</h3>
+<p><img alt="Decoder Transformer" src="../hw3/decoder_transformer.png" width="200px" /></p>
+<p><em>(Image from <a href="https://arxiv.org/pdf/1706.03762.pdf">Transformer Decoder</a>)</em>  </p>
+<p>Combine all components to create the final model. Given an input tensor <span class="arithmatex"><span class="MathJax_Preview">\(X\)</span><script type="math/tex">\(X\)</script></span> with shape 
+<span class="arithmatex"><span class="MathJax_Preview">\((\text{batch size}, \text{sequence length})\)</span><script type="math/tex">\((\text{batch size}, \text{sequence length})\)</script></span>:</p>
+<ol>
+<li>Retrieve token and positional embeddings for <span class="arithmatex"><span class="MathJax_Preview">X</span><script type="math/tex">X</script></span>.</li>
+<li>Add the embeddings together (<a href="https://web.stanford.edu/~jurafsky/slp3/10.pdf">Jurafsky and Martin, Chapter 10.1.3</a>) and pass through a dropout layer.</li>
+<li>Pass the resulting input shape <span class="arithmatex"><span class="MathJax_Preview">\((\text{batch size}, \text{sequence length}, \text{embedding dimension})\)</span><script type="math/tex">\((\text{batch size}, \text{sequence length}, \text{embedding dimension})\)</script></span> through all transformer layers.</li>
+<li>Apply a final LayerNorm.</li>
+<li>Use a final linear layer to project the hidden dimension to the vocabulary size for inference or loss computation.</li>
+</ol>
+<h3 id="check-implementation_2">Check implementation</h3>
+<p>After correctly implementing the functions, you should be able to pass tests marked as
+multihead, transformerlayer, and decoderlm by running:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_multihead_attention_student"</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_transformer_layer_1_student"</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_transformer_layer_2_student"</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"test_decoder_lm_student"</span>
+</span></code></pre></div></p>
+<h2 id="problem-4-machine-translation-pipeline-20-pts">Problem 4: Machine Translation Pipeline (20 pts)</h2>
+<p>Implement a training pipeline of machine translation on IWSLT (De-En). You will need to implement the following functions in <code>project/run_machine_translation.py</code> (highlighted with <code>BEGIN ASSIGN3_4</code> and <code>END ASSIGN3_4</code>):</p>
+<h3 id="1-generate">1. <code>generate</code></h3>
+<p>Generates target sequences for the given source sequences using the model, based on argmax decoding. Note that it runs generation on examples one-by-one instead of in a batched manner.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>             <span class="n">examples</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>             <span class="n">src_key</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>             <span class="n">tgt_key</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>             <span class="n">tokenizer</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>             <span class="n">model_max_length</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>             <span class="n">backend</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>             <span class="n">desc</span><span class="p">):</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<h4 id="parameters">Parameters</h4>
+<ul>
+<li><code>model</code>: The model used for generation.</li>
+<li><code>examples</code>: The dataset examples containing source sequences.</li>
+<li><code>src_key</code>: The key for accessing source texts in the examples.</li>
+<li><code>tgt_key</code>: The key for accessing target texts in the examples.</li>
+<li><code>tokenizer</code>: The tokenizer used for encoding texts.</li>
+<li><code>model_max_length</code>: The maximum sequence length the model can handle.</li>
+<li><code>backend</code>: The backend of minitorch tensors.</li>
+<li><code>desc</code>: Description for the generation process (used in progress bars).</li>
+</ul>
+<h4 id="returns">Returns</h4>
+<p>A list of texts as generated target sequences.</p>
+<h3 id="note">Note</h3>
+<p>We recommend you going through the <code>collate_batch</code> and <code>loss_fn</code> functions in the file to understand the data processing and loss computation steps in the training pipeline.</p>
+<h3 id="test-performance">Test Performance</h3>
+<p>Once all blanks are filled, run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>project/run_machine_translation.py
+</span></code></pre></div>
+<p>The outputs and BLEU scores will be saved in <code>./workdir_vocab10000_lr0.02_embd256</code>. You should get a BLEU score around 7 in the first epoch, and around 20 in 10 epochs. One epoch takes around an hour on V100 on PSC.</p>
+<p>Feel free to tune the hyperparameters to get a better performance, which includes:
+- Learning rate
+- Vocabulary size
+- Embedding dimension
+- number of transformer layers
+- number of heads
+- dropout rate</p>
+<p>The default hyperparameters are not guaranteed to get a good performance (e.g. nan), you may need to tune the hyperparameters to get a better performance.</p>
+<h4 id="reference-performance">Reference Performance</h4>
+<p><img alt="Performance Chart" src="../hw3/mt_performance.png" /></p>
+<h3 id="submission">Submission</h3>
+<p>Please submit the whole <code>llmsys_hw3</code> as a zip on Canvas. It should contain: </p>
+<ol>
+<li>The full codebase</li>
+<li>The result directory with the format of <code>workdir_vocab10000_lr0.02_embd256</code>. The name might be slightly different if you tuned the hyperparameters. You only need to submit one result directory with your best performance.</li>
+<li>A screenshot of the training progress. No need to include the entire training log, just the last few lines with your shell prompt (e.g., <code>[&lt;access-id&gt;@&lt;hostname&gt; llmsys_hw3] $</code>). If you use <code>sbatch</code> to do the training, you can submit the slurm output log files (e.g., slurm-<job_id>.out) instead. </li>
+</ol>
+<p>Your code will be compiled and graded with (i) <em>the private test cases for miniTorch implementation</em>, and (ii) <em>the eval results on IWSLT dataset</em>. You will receive full score if you pass all the test cases and get a BLEU score around <span class="arithmatex"><span class="MathJax_Preview">20 \pm 2</span><script type="math/tex">20 \pm 2</script></span>.</p>
+<p>Note: For submission, you can delete the files under <code>tests/data/</code> to save space.</p>
+<h2 id="fqa">FQA</h2>
+<h3 id="q1-aborted-core-dumped-due-to-nvcc-and-nvidia-driver-incompatibility-with-pytorch">Q1: Aborted (core dumped) due to nvcc and NVIDIA Driver Incompatibility with PyTorch</h3>
+<p>If you encounter an <strong>"Aborted (core dumped)"</strong> error while running PyTorch, it is likely due to an <strong>incompatibility between <code>nvcc</code> and the NVIDIA driver version</strong> used by PyTorch. This happens when:
+- <code>nvcc</code> (the CUDA compiler) is <strong>newer than</strong> the supported CUDA version in the NVIDIA driver.
+- PyTorch is built for a different CUDA version than the one installed.</p>
+<p>To <strong>fix this issue, downgrade CUDA</strong> to match the <strong>highest supported version by your NVIDIA driver</strong> and install the corresponding PyTorch version.</p>
+<h4 id="solution-downgrade-cuda-and-avoid-core-dump-errors">Solution: Downgrade CUDA and Avoid Core Dump Errors</h4>
+<p>One of the solutions is to install <strong>CUDA 12.1</strong>, which has compatible PyTorch builds.</p>
+<h5 id="1-uninstall-any-existing-pytorch-versions">1. Uninstall Any Existing PyTorch Versions</h5>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pip<span class="w"> </span>uninstall<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>-y
+</span></code></pre></div>
+<h5 id="2-load-cuda-121-module">2. Load CUDA 12.1 Module</h5>
+<p>Since CUDA 12.1 is available on your system, load it by running:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>module<span class="w"> </span>purge
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>module<span class="w"> </span>load<span class="w"> </span>cuda-12.1
+</span></code></pre></div>
+Verify the CUDA version:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>nvcc<span class="w"> </span>--version
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nvidia-smi
+</span></code></pre></div></p>
+<h5 id="3-install-pytorch-for-cuda-121">3. Install PyTorch for CUDA 12.1</h5>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu121
+</span></code></pre></div>
+<h5 id="4-verify-installation">4. Verify Installation</h5>
+<p>Run the following Python script:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"PyTorch Version:"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"CUDA Available:"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">print</span><span class="p">(</span><span class="s2">"CUDA Version:"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">cuda</span><span class="p">)</span>
+</span></code></pre></div>
+If <code>torch.cuda.is_available()</code> returns <code>False</code>, <strong>recheck the CUDA installation</strong>.</p>
+<h3 id="q2-oserror-errno-122-disk-quota-exceeded">Q2: OSError: [Errno 122] Disk quota exceeded</h3>
+<p>When logging in to PSC, you will see the Resource Panel, where describes the compute and disk quota this PSC cluster provides to you (Shared by all students).</p>
+<p>For example, the default directory for your ocean storage is: <code>/ocean/projects/cis260009p/&lt;access-id&gt;/</code>. You can link your ocean storage to your own directory by running:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ln<span class="w"> </span>-s<span class="w"> </span>/ocean/projects/cis260009p/&lt;access-id&gt;/<span class="w"> </span>~/workspace
+</span></code></pre></div>
+<p>It will create a symbolic link named <code>workspace</code> to your ocean storage directory. Everything you store in <code>~/workspace</code> will be stored in your ocean storage.</p>
+<h3 id="q3-in-problem-3-pass-the-forward-pass-tests-but-fail-the-gradient-assertions">Q3: In Problem 3, pass the forward pass tests, but fail the gradient assertions.</h3>
+<p>If you successfully pass the <code>test_decoder_lm_student</code> test, but fail the gradient assertions in the <code>test_multihead_attention_student</code>, <code>test_transformer_layer_1_student</code>, and <code>test_transformer_layer_2_student</code> tests, it is likely because you are not using the correct gradient computation methods in <code>autodiff.py</code>.</p>
+<p>Please check the <code>backpropagate</code> function in <code>autodiff.py</code>. You may need to explicitly add a <code>0.0</code> to <code>deriv_dict</code> when updating <code>deriv_dict</code> with <code>p_deriv</code>. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

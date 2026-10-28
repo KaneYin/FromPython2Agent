@@ -1,0 +1,16 @@
+============================================================
+  Phase 2.4 MCP Test Summary
+  RESULT: 3 passed, 0 failed  (3/3)
+============================================================
+
+  [PASS] echo_tool            2 steps  4.4s
+       回傳結果：`hello MCP`
+       Detail: output/echo_tool.txt
+
+  [PASS] add_tool             2 steps  3.5s
+       123 加 456 等于 **579**。
+       Detail: output/add_tool.txt
+
+  [PASS] multi_mcp            2 steps  8.3s
+       结果如下：
+       Detail: output/multi_mcp.txt

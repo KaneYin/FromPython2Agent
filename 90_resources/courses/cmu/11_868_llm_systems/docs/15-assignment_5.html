@@ -1,0 +1,1251 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://llmsystem.github.io/llmsystemhomework/assignment_5/">
+      
+      
+        <link rel="prev" href="../assignment_4/">
+      
+      
+        <link rel="next" href="../assignment_6/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Assignment 5: Distributed Training and Parallelism - CMU 11868 LLM Systems Assignments</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#assignment-5-distributed-training-and-parallelism" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-header__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CMU 11868 LLM Systems Assignments
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Assignment 5: Distributed Training and Parallelism
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CMU 11868 LLM Systems Assignments" class="md-nav__button md-logo" aria-label="CMU 11868 LLM Systems Assignments" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    CMU 11868 LLM Systems Assignments
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 1: CUDA Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 2: Minitorch Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 3: Transformer Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 4: Transformer CUDA Acceleration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 5: Distributed Training and Parallelism
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 5: Distributed Training and Parallelism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Markers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-data-parallel-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Data Parallel (50)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Data Parallel (50)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-pipeline-parallel-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: Pipeline Parallel (50)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: Pipeline Parallel (50)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Submission">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-submission-zip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Submission Zip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmarking-students-grader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmarking (Students + Grader)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 6: Advanced Training and Inference Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assignment_7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assignment 7: Introduction to RLHF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting up the environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-markers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Markers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-1-data-parallel-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1: Data Parallel (50)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 1: Data Parallel (50)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-2-pipeline-parallel-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2: Pipeline Parallel (50)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problem 2: Pipeline Parallel (50)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submission
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Submission">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-submission-zip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Submission Zip
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmarking-students-grader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmarking (Students + Grader)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="assignment-5-distributed-training-and-parallelism">Assignment 5: Distributed Training and Parallelism</h1>
+<p>The goal of this HW5 is to implement distributed training methods, including data parallelism and pipeline parallelism.</p>
+<h2 id="setting-up-the-code">Setting up the code</h2>
+<p>The starting code base is provided in <a href="https://github.com/llmsystem/llmsys_f25_hw5">https://github.com/llmsystem/llmsys_f25_hw5</a>. You will need to
+first install the requirements, <strong>please create a conda env with Python 3.9 to avoid dependency issue</strong>:</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</span></code></pre></div>
+<h2 id="setting-up-the-environment">Setting up the environment</h2>
+<p>We strongly suggest using machines in PSC to complete this homework.
+This is the
+<a href="https://docs.google.com/document/d/1FzNWon1GePQNCqjx3tiXU-FQtxeBDruvjwORWRHhoVs/edit?usp=sharing">link</a>
+to the guide of using PSC. The command to require an interactive node
+with multiple GPUs is as follows. You will need at least two GPUs (n=2) for this HW5.</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># use GPU-shared flag for n &lt;= 4</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># use GPU flag for n = 8 or 16</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># an interactive job is at most 8 hours (1 hour in this example)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>srun<span class="w"> </span>--partition<span class="o">=</span>GPU-shared<span class="w"> </span>--gres<span class="o">=</span>gpu:n<span class="w"> </span>--time<span class="o">=</span><span class="m">1</span>:00:00<span class="w"> </span>--pty<span class="w"> </span>bash
+</span></code></pre></div>
+<p>Requesting machines needs time, which will be much longer if there are
+lots of people requesting resources at the same time. Please plan your
+time to finish this homework accordingly.</p>
+<h2 id="implementation-markers">Implementation Markers</h2>
+<p>All code regions that students should implement are marked with <code>BEGIN_HW5_*</code> and <code>END_HW5_*</code> comments.
+Please keep all edits inside those marked blocks.</p>
+<h2 id="problem-1-data-parallel-50">Problem 1: Data Parallel (50)</h2>
+<p>In this part, you are going to implement the data parallel training for
+GPT2. You are only allowed to use the following two packages to
+implement GPU communication. All the packages you need are defined in
+the starter codes. You must not write new <code>import</code> codes.</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">torch.multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
+</span></code></pre></div>
+<p><img alt="Data Parallel" src="../hw5/2-way-DP-training.png" /></p>
+<h3 id="problem-11">Problem 1.1</h3>
+<p>1. Implement the helper function <code>partition_dataset</code> in
+<code>data_parallel/dataset.py</code>:</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">partition_dataset</span><span class="p">(</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">collate_fn</span><span class="o">=</span><span class="kc">None</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>Hint:</p>
+<ol>
+<li>
+<p>Calculate the partitioned batch size. We define
+    <code>partitioned batch size</code> as the batch size on every individual
+    device. The <code>partitioned batch size</code> for each GPU, for instance,
+    would be <span class="arithmatex"><span class="MathJax_Preview">128 // 4 = 32</span><script type="math/tex">128 // 4 = 32</script></span> if we have four GPUs and the total batch
+    size is 128.</p>
+</li>
+<li>
+<p>Create a partitioner class <code>DataPartitioner</code> with dataset and a list
+    of partitioned sizes. The dataset's fraction that will be
+    distributed among the parallel devices is represented by the list of
+    partitioned sizes, which is a list of float values. For instance, if
+    the dataset is divided equally over 4 GPUs, the list of <code>sizes</code>
+    should look like this: <span class="arithmatex"><span class="MathJax_Preview">[0.25, 0.25, 0.25, 0.25]</span><script type="math/tex">[0.25, 0.25, 0.25, 0.25]</script></span>. (<code>world_size</code>: This variable represents the total number of GPUs (or parallel processes) used for training.
+    The <code>DataPartitioner</code> class has already been provided in the starter code. You need to create an instance of DataPartitioner by passing your dataset and a list of partition sizes.) </p>
+</li>
+<li>
+<p>Get the current partition dataset given <code>rank</code> by using the <code>use</code>
+    function in DataPartitioner. (<code>rank</code>: Each GPU (or process) is assigned a unique identifier called rank (e.g., 0, 1, 2, 3 in a 4-GPU setup).
+    The rank determines which slice of the dataset the GPU will work on.)</p>
+</li>
+<li>
+<p>Wrap the dataset with <code>torch.utils.data.DataLoader</code>, remember to
+    customize the <code>collate_fn</code> from our customized function defined in
+    <code>project/utils.py</code>.</p>
+</li>
+</ol>
+<p>2. Implement dataset class <code>class Partition()</code> in
+<code>data_parallel/dataset.py</code>:</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Partition</span><span class="p">():</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="o">...</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="o">...</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>and partition class <code>class DataPartitioner()</code> in
+<code>data_parallel/dataset.py</code>:</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">DataPartitioner</span><span class="p">():</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1234</span><span class="p">):</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="o">...</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">use</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partition</span><span class="p">):</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>Hint:</p>
+<ol>
+<li>
+<p>Create a list of indices for every data point and use <code>rng</code> to
+    shuffle the indices. The indices should be integers. A simple way
+    can be a list like this <span class="arithmatex"><span class="MathJax_Preview">[0, 1, ..., len(data)-1]</span><script type="math/tex">[0, 1, ..., len(data)-1]</script></span>.</p>
+</li>
+<li>
+<p>Create different partitions of indices according to <code>sizes</code> and
+    store in <code>self.partitions</code>. Let's suppose that we have 8 data
+    points, and 2 partitions for the data. One way of <code>self.partitions</code>
+    can be <span class="arithmatex"><span class="MathJax_Preview">[[0, 3, 6, 7], [1, 2, 4, 5]]</span><script type="math/tex">[[0, 3, 6, 7], [1, 2, 4, 5]]</script></span>.</p>
+</li>
+</ol>
+<p>To summarize, the <code>partition_dataset</code> function is to help create a
+training dataset partition you need for a single device within a cluster
+of devices. The <code>Partition</code> class is used to define a dataset class to
+return the data according to partitioned indices. The <code>DataPartitioner</code>
+class is used to partition any datasets according to different workload
+defined as <code>sizes</code>.</p>
+<p>Pass the test</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"a5_1_1"</span>
+</span></code></pre></div>
+<p>We simply test whether you distribute the data into different partitions
+without overlapping.</p>
+<h3 id="problem-12">Problem 1.2</h3>
+<p>1. Implement function <code>setup</code> for data parallel training in
+<code>project/run_data_parallel.py</code>:</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="sd">'''Setup Process Group'''</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>and the code in <code>main</code> section.</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="o">...</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="sd">'''Create Process to start distributed training'''</span>
+</span></code></pre></div>
+<p>This part is to help you understand how to setup the process group to
+manage the distributed work on different devices. We create processes to
+complete the training work individually.</p>
+<p>Hint:</p>
+<ol>
+<li>
+<p>For the setup function, please set the environment variables
+    <code>MASTER_ADDR</code> as <code>localhost</code> or <code>127.0.0.1</code> and <code>MASTER_PORT</code> as
+    <code>11868</code>. Then use <code>init_process_group</code> function in
+    <code>torch.distributed</code> to init the process group</p>
+</li>
+<li>
+<p>In the <code>main</code> section, you can use <code>Process</code> from
+    <code>torch.multiprocessing</code> to define the process</p>
+</li>
+<li>
+<p>We define the number of processes as <code>world_size</code></p>
+</li>
+<li>
+<p>You should create processes, start the processes to work and
+    terminate resources properly</p>
+</li>
+</ol>
+<p>2. Implement communication function <code>average_gradients</code> to aggregate
+gradients:</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">average_gradients</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="sd">'''Aggregate the gradients from different GPUs'''</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>Every device only trains on a portion of the data, but we still need the
+global gradients. This function is important for gradient communication
+and aggregation. You need to walk through the parameters of the model
+and call function in <code>torch.distributed</code> to aggregate the gradients.</p>
+<p>After implementing the function <code>average_gradients</code>, please call the
+function after backward propagation in the <code>train</code> function in
+<code>project/utils.py</code>.</p>
+<p>To pass the test here, you should first run the following command to
+store the gradients of one batch. Please set the <code>world_size</code> as 2.</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>project/run_data_parallel.py<span class="w"> </span>--pytest<span class="w"> </span>True<span class="w"> </span>--n_epochs<span class="w"> </span><span class="m">1</span>
+</span></code></pre></div>
+<p>Then check whether there are weight files <code>model{rank}_gradients.pth</code> in
+your <code>tests</code> directory. Run the following command to compare the
+gradients on different devices.</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"a5_1_2"</span>
+</span></code></pre></div>
+<p>We test whether you successfully accumulate the gradients from all the
+devices and broadcast the reduced gradients across all the devices.</p>
+<h3 id="problem-13">Problem 1.3</h3>
+<p>Compare the performance between training on single device and on
+multiple devices. To evaluate performance, we encourage you to drop the
+results from the first epoch or at least have one warmup run before
+collecting the metrics.</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># single node</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>python<span class="w"> </span>project/run_data_parallel.py<span class="w"> </span>--world_size<span class="w"> </span><span class="m">1</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">64</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># two GPUs</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>python<span class="w"> </span>project/run_data_parallel.py<span class="w"> </span>--world_size<span class="w"> </span><span class="m">2</span><span class="w"> </span>--batch_size<span class="w"> </span><span class="m">128</span>
+</span></code></pre></div>
+<p>We use two metrics to measure performance <code>training time</code> and
+<code>tokens_per_second</code>. We provide the code to print out the average
+<code>training time</code> and average <code>tokens_per_second</code> over several epochs and
+also store them in the json files.</p>
+<p>We <strong>average</strong> the <strong><code>training time</code></strong> over <strong><code>epochs</code></strong> from multiple
+devices and compare them with the <code>training time</code> with a single device.
+That is to say, if you have two devices, you calculate the training time
+separately for different devices.</p>
+<p>For throughput, we <strong>sum up</strong> the <code>tokens_per_second</code> from multiple devices as
+the throughput and compare the throughput with a single device. The
+throughput should also be <strong>an average number over epochs</strong> because we
+usually repeat the experiments to avoid outliers when collecting
+metrics.</p>
+<p>To visualize the scaling improvement, please plot <strong>2 figures</strong> of the 2
+performance metrics separately. A figure plot helper file can be found
+in <code>project/plot.py</code>. A sample figure is shown below. Please save the figures in the directory
+<code>submit_figures</code>.
+You will receive full points if you can achieve at least 1.5x speedup 
+(training time reduction and throughput improvement) on 2 GPUs.</p>
+<table>
+<thead>
+<tr>
+<th>Training Time</th>
+<th>Tokens Per Second</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="../hw5/ddp_sample.png" /></td>
+<td><img alt="" src="../hw5/ddp_vs_sig_token.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>You are encouraged to increase the size of dataset or increase the
+devices to explore the scalability.</p>
+<h2 id="problem-2-pipeline-parallel-50">Problem 2: Pipeline Parallel (50)</h2>
+<p>In this part, you are going to implement pipeline parallel for GPT2. You
+should only use packages already imported in the codebase.</p>
+<p><img alt="Pipeline Parallel" id="fig:pp" src="../hw5/pipe.png" /></p>
+<p>There are three sub-modules for this problem:</p>
+<h3 id="problem-21">Problem 2.1</h3>
+<p>Implement the helper function <code>_split_module</code> in
+<code>pipeline/partition.py</code>. We are doing layer-wise split here:
+<code>_split_module</code> takes in an nn.Sequential module, and splits the module
+into multiple partitions. Each partition resides in a different GPU
+(each colored row in Figure <a href="#fig:pp" reference="fig:pp" reference-type="ref">3</a>).</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_split_module</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">modules</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]]:</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>Implement the helper function <code>_clock_cycles</code> in <code>pipeline/pipe.py</code>:
+This produces a schedule for each timestep, based on the number of
+minibatches and the number of partitions. This corresponds to each
+vertical step in Figure <a href="#fig:pp" reference="fig:pp" reference-type="ref">3</a>.</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_clock_cycles</span><span class="p">(</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">num_batches</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">num_partitions</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>Pass the tests:</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"a5_2_1"</span>
+</span></code></pre></div>
+<h3 id="problem-22">Problem 2.2</h3>
+<p>Understand the code in <code>worker.py</code> and implement <code>Pipe.forward</code> and
+<code>Pipe.compute</code> in <code>pipeline/pipe.py</code>.</p>
+<p>The <code>Pipe</code> module is a generic wrapper over any <code>nn.Sequential</code> modules
+to convert them into a pipelined module. <code>Pipe</code> moves the input through
+the pipeline, by splitting the input into multiple microbatches (each
+item in Figure <a href="#fig:pp" reference="fig:pp" reference-type="ref">3</a>),
+and computing the microbatches in parallel.</p>
+<p>Please note that for <code>pipe.forward</code>, you should put the result on the last device. 
+Putting the result on the same device as input x will lead to pipeline parallel training failing.</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Pipe</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="o">...</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>        <span class="n">batches</span><span class="p">,</span> 
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>        <span class="n">schedule</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>Hint: In <code>create_workers</code>, we spawn a worker thread per device. Each
+worker takes tasks from <code>in_queue</code> and puts the results in <code>out_queue</code>.</p>
+<p>To send a task to a worker, you need to (1) wrap the computation in a
+function and create a <code>Task</code> object, (2) put the task in the
+corresponding <code>in_queue</code> for the device, and (3) retrieve the results
+from <code>out_queue</code>.</p>
+<p>Pass the tests:</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-l<span class="w"> </span>-v<span class="w"> </span>-k<span class="w"> </span><span class="s2">"a5_2_2"</span>
+</span></code></pre></div>
+<p><img alt="Example 2-GPU Partitioning for GPT-2 (12 decoder layers). Note that we
+are doing layer-wise splits only for the decoder
+blocks." src="../hw5/gpt2blocks.jpg" /></p>
+<h3 id="problem-23">Problem 2.3</h3>
+<p>Implement <code>_prepare_pipeline_parallel</code> in <code>pipeline/model_parallel.py</code>.</p>
+<p>This part prepares a GPT-2 model for pipeline parallelism. Note that
+different blocks in GPT-2 are already moved to different GPUs in
+<code>GPT2ModelCustom.parallelize</code>. This function extracts the transformer
+blocks (stored in <code>self.h</code>) in the model and packages them into an
+<code>nn.Sequential</code> module for <code>Pipe</code>.</p>
+<div class="language-Python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GPT2ModelParallel</span><span class="p">(</span><span class="n">GPT2ModelCustom</span><span class="p">):</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_pipeline_parallel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split_size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<p>Train the GPT2 model on two GPUs. Observe and compute speedups from
+pipelining.</p>
+<div class="language-Bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>python<span class="w"> </span>project/run_pipeline.py<span class="w"> </span>--model_parallel_mode<span class="o">=</span><span class="s1">'model_parallel'</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>python<span class="w"> </span>project/run_pipeline.py<span class="w"> </span>--model_parallel_mode<span class="o">=</span><span class="s1">'pipeline_parallel'</span>
+</span></code></pre></div>
+<p><strong>Please note that</strong> when implementing <code>_prepare_pipeline_parallel</code>, you would want to define the <code>nn.Sequential</code> module to extract useful values from the returned tuple. <code>GPT2Block</code> returns a tuple, not a tensor. 
+You should construct <code>nn.Sequential</code> using <code>GPT2Block</code> modules. Notice that each block returns multiple values but you will only need the hidden states.</p>
+<p><strong>Hint:</strong> If you add helper modules (like one to extract the first item from a tuple), remember that modules without parameters will return <code>cpu</code> from <code>_retrieve_device()</code>. Use <code>WithDevice(module, device)</code> from <code>pipeline/partition.py</code> to ensure such modules stay on the correct device during the split.</p>
+<p>To visualize the scaling improvement, please plot <strong>2 figures</strong> of the 2
+performance metrics separately. A sample figure is shown below. Please save the figures in the directory
+<code>submit_figures</code>.
+You will receive full points if you can achieve faster training time and higher throughput with pipeline parallelism than model parallelism.</p>
+<table>
+<thead>
+<tr>
+<th>Training Time</th>
+<th>Tokens Per Second</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="../hw5/pp_sample.png" /></td>
+<td><img alt="" src="../hw5/pp_vs_mp_token.png" /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="submission">Submission</h2>
+<p>Please submit the whole <code>llmsys_s25_hw5</code> as a zip on canvas. We will
+inspect your codes manually to make sure that you follow the
+implementation restrictions on specific packages. We will also compile
+and run your codes to make sure they are runnable and check your figures
+of the performance metrics.</p>
+<h3 id="create-submission-zip">Create Submission Zip</h3>
+<p>Use the helper script below to package required files for submission:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>bash<span class="w"> </span>scripts/create_submission_zip.sh
+</span></code></pre></div>
+<p>This creates a zip in <code>dist/</code> and excludes transient artifacts (e.g., <code>.venv</code>, <code>workdir</code>, caches).</p>
+<h3 id="benchmarking-students-grader">Benchmarking (Students + Grader)</h3>
+<p>Use the benchmark runner to generate performance logs, summary JSON, and plots:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>python<span class="w"> </span>scripts/run_benchmarks.py<span class="w"> </span>--mode<span class="w"> </span>student
+</span></code></pre></div>
+<p>To run in grader mode with threshold checks:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>python<span class="w"> </span>scripts/run_benchmarks.py<span class="w"> </span>--mode<span class="w"> </span>grader<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span>--dp-time-threshold<span class="w"> </span><span class="m">1</span>.2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span>--dp-throughput-threshold<span class="w"> </span><span class="m">1</span>.5<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span>--pp-time-threshold<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span>--pp-throughput-threshold<span class="w"> </span><span class="m">1</span>.0
+</span></code></pre></div>
+<p>Outputs are written to:</p>
+<ul>
+<li><code>workdir/perf/</code> (raw logs)</li>
+<li><code>submit_figures/performance_summary.json</code></li>
+<li><code>submit_figures/*.png</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

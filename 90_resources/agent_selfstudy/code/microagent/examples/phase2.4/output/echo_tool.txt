@@ -1,0 +1,16 @@
+============================================================
+  Case: echo_tool
+  Query: 用 echo 工具把 'hello MCP' 回传给我
+============================================================
+
+  Step 1 — Tool Calls:
+    mock_echo({"text": "hello MCP"})
+  Step 1 — Action: mock_echo({"text": "hello MCP"})
+  Step 1 — Observation:
+    Echo: hello MCP
+  Step 2 — Final Answer:
+    回傳結果：`hello MCP`
+
+  Result: PASS
+  Steps: 2  |  Tokens: 672  |  Latency: 4406ms  |  Wall: 4.4s
+  Answer: 回傳結果：`hello MCP`

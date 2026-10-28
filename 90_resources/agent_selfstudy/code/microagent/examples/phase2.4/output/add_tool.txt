@@ -1,0 +1,16 @@
+============================================================
+  Case: add_tool
+  Query: 用 add 工具算 123 加 456
+============================================================
+
+  Step 1 — Tool Calls:
+    mock_add({"a": 123, "b": 456})
+  Step 1 — Action: mock_add({"a": 123, "b": 456})
+  Step 1 — Observation:
+    579
+  Step 2 — Final Answer:
+    123 加 456 等于 **579**。
+
+  Result: PASS
+  Steps: 2  |  Tokens: 652  |  Latency: 3531ms  |  Wall: 3.5s
+  Answer: 123 加 456 等于 **579**。

@@ -1,0 +1,24 @@
+============================================================
+  Case: file_read
+  Query: 读取 hello.txt 的内容
+============================================================
+
+  Step 1 — Tool Calls:
+    file_read({"path": "hello.txt"})
+  Step 1 — Action: file_read({"path": "hello.txt"})
+  Step 1 — Observation:
+    Hello MicroAgent
+  Step 2 — Final Answer:
+    文件 `hello.txt` 的内容是：
+    
+    ```
+    Hello MicroAgent
+    ```
+
+  Result: PASS
+  Steps: 2  |  Tokens: 2061  |  Latency: 2907ms  |  Wall: 2.9s
+  Answer: 文件 `hello.txt` 的内容是：
+
+```
+Hello MicroAgent
+```
