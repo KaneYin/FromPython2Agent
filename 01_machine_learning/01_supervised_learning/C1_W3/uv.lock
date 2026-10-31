@@ -31,6 +31,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "scikit-learn" },
+    { name = "utils" },
 ]
 
 [package.metadata]
@@ -41,6 +42,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "numpy", specifier = ">=2.5.4" },
     { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "utils", specifier = ">=1.0.2" },
 ]
 
 [[package]]
@@ -1151,6 +1153,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/d9/68/f1b440335057bfce7
 wheels = [
     { url = "https://files.pythonhosted.org/packages/94/21/1e5995a1c920cce14e4bffae20c665ec10e7ed03ab25e006cd741092b718/tzdata-2026.5-py2.py3-none-any.whl", hash = "sha256:b683bd1b6659ddcd810ff02ad09ba821d4bf1065072805063eb35c49617905ac", size = 347996, upload-time = "2026-10-03T09:23:12.535Z" },
 ]
+
+[[package]]
+name = "utils"
+version = "1.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/1f/c196d21c2df061923154aecf24cab049a114394956e90c9bfbfdd398e27a/utils-1.0.2.tar.gz", hash = "sha256:f4d5157e27e9d434006b5b52a1ec951a34e53e7ecaa145d43a153ec452eb5d9e", size = 13203, upload-time = "2024-01-06T07:11:25.75Z" }
 
 [[package]]
 name = "wcwidth"
