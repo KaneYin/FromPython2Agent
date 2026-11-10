@@ -1,0 +1,11 @@
+[project]
+name = "two-layer-nn-numpy"
+version = "0.1.0"
+description = "Two-layer neural network from scratch with NumPy on the Two Moons dataset"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "scikit-learn>=1.9.1",
+]
