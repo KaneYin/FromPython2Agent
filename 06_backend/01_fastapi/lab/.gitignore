@@ -1,0 +1,9 @@
+# Generated model artifacts and local databases
+*.keras
+*.joblib
+*.pkl
+*.sqlite
+*.sqlite3
+*.db
+.coverage
+htmlcov/

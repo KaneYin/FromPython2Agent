@@ -1,0 +1,29 @@
+[project]
+name = "fastapi-learning-lab"
+version = "0.1.0"
+description = "Learner implementations for a four-week FastAPI roadmap"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi[standard]==0.115.2",
+    "pandas==2.2.3",
+    "scikit-learn==1.5.2",
+]
+
+[project.optional-dependencies]
+mnist = [
+    "tensorflow==2.17.0",
+    "pillow==11.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.27,<0.28",
+    "pytest>=8.3,<9",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

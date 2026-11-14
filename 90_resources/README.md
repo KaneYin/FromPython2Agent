@@ -1,6 +1,6 @@
 # 90 - Resources
 
-Course archives, papers, reading notes, and imported implementations supporting the main `00` through `05` learning stages. The `90` prefix groups this supporting material after the personal learning projects.
+Course archives, papers, reading notes, and imported implementations supporting the main `00` through `06` learning stages. The `90` prefix groups this supporting material after the personal learning projects.
 
 | Collection | Contents |
 | --- | --- |
@@ -8,6 +8,7 @@ Course archives, papers, reading notes, and imported implementations supporting 
 | [CMU 11-768: AI Agents](courses/cmu/11_768_ai_agents/README.md) | Lecture archive and the local HW1 working copy |
 | [CMU 11-868: LLM Systems](courses/cmu/11_868_llm_systems/README.md) | Archived documentation, slides, assignments, and imported examples |
 | [Agent self-study](agent_selfstudy/README.md) | Blog notes, papers, public-course slides, and annotated reference implementations |
+| [FastAPI workshop](courses/fastapi/README.md) | Pinned upstream ML workshop with penguin data, MNIST samples, and original examples; paired with the four-week backend lab |
 
 Collections moved as units. Their internal assignment layouts, environments, attribution, and licenses remain with them. The two copies of Agents HW1 remain separate; the coursework copy retains its nested `chess_app` checkout. Course READMEs describe archived material rather than a freshly verified schedule.
 
