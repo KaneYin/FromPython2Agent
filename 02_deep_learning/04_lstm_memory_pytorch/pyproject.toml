@@ -1,0 +1,11 @@
+[project]
+name = "lstm-memory-pytorch"
+version = "0.1.0"
+description = "Hand-written LSTM on the same memory task, compared with the vanilla RNN"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "torch>=2.9.0",
+]
