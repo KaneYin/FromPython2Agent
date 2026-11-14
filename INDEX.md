@@ -6,7 +6,7 @@
 
 ## 个人练习与 Demo
 
-主线顺序为 `00_python_basics → 01_machine_learning → 02_deep_learning → 03_llm → 04_rag → 05_agents`。机器学习与深度学习阶段目前只有说明文件，为后续实现预留位置；课程和参考资料统一放在 `90_resources/`。
+主线顺序为 `00_python_basics → 01_machine_learning → 02_deep_learning → 03_llm → 04_rag → 05_agents → 06_backend`。机器学习与深度学习阶段目前只有说明文件，为后续实现预留位置；课程和参考资料统一放在 `90_resources/`。
 
 | 目录 | 内容与状态 |
 |---|---|
@@ -17,6 +17,7 @@
 | [03_llm/02_transformer_from_scratch/](03_llm/02_transformer_from_scratch/README.md) | Transformer 学习 Notebook，实现部分未完成 |
 | [04_rag/01_basic_rag/](04_rag/01_basic_rag/README.md) | 基于 Ollama 的 RAG Demo，模拟服务响应的完整流程检查通过 |
 | [05_agents/01_agent_loop/](05_agents/01_agent_loop/README.md) | 工具调用循环草稿，保留语法问题与工具占位实现 |
+| [06_backend/01_fastapi/](06_backend/01_fastapi/README.md) | Four-week FastAPI lab: API contracts, dependency injection, testing, MNIST uploads, Docker, and blog authorization |
 
 以上未完成内容均保留原样，未在仓库整理中补全。
 

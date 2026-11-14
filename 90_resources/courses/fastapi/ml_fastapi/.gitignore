@@ -1,0 +1,6 @@
+.venv
+.python-version
+__pycache__
+.ruff_cache
+models/model_*
+models/artifacts/

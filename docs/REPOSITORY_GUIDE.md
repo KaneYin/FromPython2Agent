@@ -12,6 +12,7 @@ The 2026-10-26 layout uses stable topic stages with a second level of ordering f
 | `03` | [LLMs](../03_llm/README.md) | Chat interfaces, tokenization, transformers, training, and inference implementations |
 | `04` | [RAG](../04_rag/README.md) | Embeddings, retrieval, indexing, and retrieval-augmented generation projects |
 | `05` | [Agents](../05_agents/README.md) | Tool loops, planning, memory, agent evaluation, and orchestration implementations |
+| `06` | [Backend](../06_backend/README.md) | FastAPI, HTTP contracts, application lifecycle, testing, persistence, authentication, and deployment |
 | `90` | [Resources](../90_resources/README.md) | Course archives, papers, reading notes, and imported reference projects |
 
 The sequence communicates a learning route. A small API demo can still be explored before completing every earlier stage. Existing code remains learning work with the limitations recorded in the [2026-10-23 review](CODE_REVIEW.md).
@@ -20,7 +21,7 @@ The sequence communicates a learning route. A small API demo can still be explor
 
 1. Use two digits followed by a lowercase `snake_case` description: `01_linear_regression/`, `02_logistic_regression/`, or `03_tokenization/`.
 2. Restart project numbering inside each stage. A stage number names the broad topic; a child number orders that topic's lessons or implementations.
-3. Append new material with the next unused child number. Keep the current stage numbers stable; `06` through `89` remain available for future stages.
+3. Append new material with the next unused child number. Keep the current stage numbers stable; `07` through `89` remain available for future stages.
 4. Keep related notes, data, entry points, and dependency files inside their project. Small Python exercises can remain in `00_python_basics/exercises/`.
 5. Give each independent project a README with its purpose, current status, setup, and run location. Update its stage README; add useful concept/resource links to `INDEX.md`.
 6. Preserve upstream package names, assignment layouts, filenames used by imports, attribution, and licenses inside imported projects. Course codes such as `11_768` identify courses rather than learning stages.
@@ -76,6 +77,7 @@ This repository is a collection of separate projects. There is no root dependenc
 | Transformer study | `03_llm/02_transformer_from_scratch/` | Separate notebook kernel and environment; existing outputs retained |
 | Basic RAG | `04_rag/01_basic_rag/` | Launch here so `cat-facts.txt` resolves; requires its configured Ollama models |
 | Agent loop | `05_agents/01_agent_loop/` | Syntax-blocked draft; dependencies alone do not complete it |
+| FastAPI learning lab | `06_backend/01_fastapi/lab/` | Python 3.12; independent uv environment; exercise implementations remain TODOs |
 
 For example, the RAG project's locked setup remains:
 
@@ -98,6 +100,7 @@ Existing `.venv` directories were moved intact with their projects. Activation s
 | `agent_selfstudy/code/microagent/` | Reference implementation and local notes |
 | `agent_selfstudy/code/deep-research/` | TypeScript reference project with a separate npm environment |
 | `agent_selfstudy/code/smolagents-codeagent-demo/` | Reference demo with its own requirements |
+| `courses/fastapi/ml_fastapi/` | Unmodified ML workshop snapshot with data, worked examples, and MIT license; provenance in adjacent `UPSTREAM.json` |
 | `courses/cmu/11_763_llm_inference/code/` | Imported examples and unfinished homework starters |
 | `courses/cmu/11_868_llm_systems/repos/` | Imported LLM Systems assignments and examples |
 

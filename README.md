@@ -1,6 +1,6 @@
 # FromPython2Agent
 
-A personal learning workspace progressing from Python fundamentals to machine learning, deep learning, LLMs, retrieval, and agents. The two-digit folder prefixes define the learning order. Each runnable project keeps its own environment.
+A personal learning workspace progressing from Python fundamentals to machine learning, deep learning, LLMs, retrieval, agents, and backend services. The two-digit folder prefixes define the learning order. Each runnable project keeps its own environment.
 
 ## Learning path
 
@@ -12,6 +12,7 @@ A personal learning workspace progressing from Python fundamentals to machine le
 | 03 | [LLMs](03_llm/README.md) | Minimal chat examples, model-interface drafts, and a transformer study notebook |
 | 04 | [RAG](04_rag/README.md) | A basic Ollama retrieval and generation demo |
 | 05 | [Agents](05_agents/README.md) | A tool-calling agent-loop draft |
+| 06 | [Backend](06_backend/README.md) | A four-week FastAPI learning lab with browser lessons, ML workshop sources, and official references |
 
 ```text
 FromPython2Agent/
@@ -27,7 +28,10 @@ FromPython2Agent/
 │   └── 01_basic_rag/
 ├── 05_agents/
 │   └── 01_agent_loop/
+├── 06_backend/
+│   └── 01_fastapi/
 ├── 90_resources/
+│   ├── courses/fastapi/ml_fastapi/
 │   ├── courses/cmu/
 │   │   ├── 11_763_llm_inference/
 │   │   ├── 11_768_ai_agents/
