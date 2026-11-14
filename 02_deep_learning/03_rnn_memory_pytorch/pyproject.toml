@@ -1,0 +1,11 @@
+[project]
+name = "rnn-memory-pytorch"
+version = "0.1.0"
+description = "Hand-written RNN on a first-signal memory task, with BPTT and gradient clipping"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "torch>=2.9.0",
+]
