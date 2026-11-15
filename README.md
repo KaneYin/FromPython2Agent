@@ -50,7 +50,7 @@ flowchart LR
 | Stage | Topic | What you build | Status |
 | --- | --- | --- | --- |
 | 00 | [Python basics](00_python_basics/README.md) | 14 ordered notes: variables, strings, collections, functions, classes, typing | ✅ notes · 🚧 exercises |
-| 01 | [Machine learning](01_machine_learning/README.md) | Linear regression, gradient descent, feature scaling, logistic regression, regularization; VGG from scratch | ✅ labs · 🧪 logistic-regression TODO branch |
+| 01 | [Machine learning](01_machine_learning/README.md) | Linear regression, gradient descent, feature scaling, logistic regression, regularization; VGG from scratch | ✅ labs |
 | 02 | [Deep learning](02_deep_learning/README.md) | Two-layer NN in NumPy; CNN on MNIST; hand-written RNN and LSTM | 🧪 exercises (TODOs for the learner) |
 | 03 | [LLMs](03_llm/README.md) | Minimal chat clients; transformer study notebook | 🚧 draft |
 | 04 | [RAG](04_rag/README.md) | Retrieval and generation with local [Ollama](https://ollama.com/) models | 🚧 demo |
@@ -81,7 +81,7 @@ Labs that follow course 1 (Supervised Machine Learning), weeks 1–3, of the [Ma
 | C1 W2 | Multiple linear regression, feature scaling, learning rate, polynomial features, scikit-learn | [C1_W2](01_machine_learning/01_supervised_learning/C1_W2/) |
 | C1 W3 | Classification, sigmoid, decision boundary, logistic loss, overfitting, regularization | [C1_W3](01_machine_learning/01_supervised_learning/C1_W3/) |
 
-Also: [VGG from scratch](01_machine_learning/VGG/README.md) in PyTorch, and a logistic-regression exercise with API references on the [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) branch (not merged yet).
+Also: [VGG from scratch](01_machine_learning/VGG/README.md) in PyTorch.
 
 ### 02 · Deep learning
 
@@ -182,11 +182,6 @@ FromPython2Agent/
 └── README.md
 ```
 
-| Branch | Contents |
-| --- | --- |
-| [`main`](https://github.com/KaneYin/FromPython2Agent/tree/main) | Learning path, including the deep-learning labs |
-| [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) | Logistic regression TODO exercise |
-
 ## FAQ
 
 ### Do I need a GPU?
@@ -200,10 +195,6 @@ Writing convolution, backpropagation and BPTT by hand shows what each tensor sha
 ### Are solutions included?
 
 Mostly no. The labs contain stubs, self-checks and plots; the self-checks tell you whether your implementation is correct. The one exception is the Chinese two-layer notebook, which holds the author's in-progress answers.
-
-### Why is the logistic-regression exercise on a separate branch?
-
-It is a TODO rewrite of an existing notebook, kept on [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) until it is reviewed and merged.
 
 ### What is the difference between this repository and a course?
 

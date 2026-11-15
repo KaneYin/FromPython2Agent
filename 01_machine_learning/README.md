@@ -10,8 +10,6 @@ Classical supervised learning, implemented step by step in NumPy and checked aga
 | [C1 W2](01_supervised_learning/C1_W2/) | Multiple linear regression, feature scaling and learning rate, feature engineering and polynomial regression, scikit-learn gradient descent | `C1_W2_Lab02`–`Lab05`, `C1_W2_Linear_Regression` |
 | [C1 W3](01_supervised_learning/C1_W3/) | Classification, sigmoid, decision boundary, logistic loss and cost, gradient descent, scikit-learn, overfitting, regularization | `C1_W3_Lab01`–`Lab09`, `C1_W3_Logistic_Regression`, `01_student_pass_logistic_regression_exercises` |
 
-A TODO version of the logistic regression exercise, with API references and self-checks, lives on the [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) branch.
-
 ## Other projects
 
 | Project | Contents |
