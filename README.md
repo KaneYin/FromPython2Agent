@@ -11,7 +11,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Languages](https://img.shields.io/badge/docs-English%20%7C%20%E4%B8%AD%E6%96%87-blue)](#supported-languages)
 
-*Last updated: 2026-11-14*
+*Last updated: 2026-11-15*
 
 ## Contents
 
@@ -51,7 +51,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | 00 | [Python basics](00_python_basics/README.md) | 14 ordered notes: variables, strings, collections, functions, classes, typing | ✅ notes · 🚧 exercises |
 | 01 | [Machine learning](01_machine_learning/README.md) | Linear regression, gradient descent, feature scaling, logistic regression, regularization; VGG from scratch | ✅ labs · 🧪 logistic-regression TODO branch |
-| 02 | [Deep learning](02_deep_learning/README.md) | Two-layer NN in NumPy; CNN on MNIST; hand-written RNN and LSTM | 🧪 exercises on branches (see below) |
+| 02 | [Deep learning](02_deep_learning/README.md) | Two-layer NN in NumPy; CNN on MNIST; hand-written RNN and LSTM | 🧪 exercises (TODOs for the learner) |
 | 03 | [LLMs](03_llm/README.md) | Minimal chat clients; transformer study notebook | 🚧 draft |
 | 04 | [RAG](04_rag/README.md) | Retrieval and generation with local [Ollama](https://ollama.com/) models | 🚧 demo |
 | 05 | [Agents](05_agents/README.md) | Tool-calling agent loop | 🚧 draft |
@@ -81,18 +81,18 @@ Labs that follow course 1 (Supervised Machine Learning), weeks 1–3, of the [Ma
 | C1 W2 | Multiple linear regression, feature scaling, learning rate, polynomial features, scikit-learn | [C1_W2](01_machine_learning/01_supervised_learning/C1_W2/) |
 | C1 W3 | Classification, sigmoid, decision boundary, logistic loss, overfitting, regularization | [C1_W3](01_machine_learning/01_supervised_learning/C1_W3/) |
 
-Also: [VGG from scratch](01_machine_learning/VGG/README.md) in PyTorch, and a logistic-regression exercise with API references on the [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) branch.
+Also: [VGG from scratch](01_machine_learning/VGG/README.md) in PyTorch, and a logistic-regression exercise with API references on the [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) branch (not merged yet).
 
 ### 02 · Deep learning
 
-Each lab is a Chinese Jupyter notebook with formulas, API tables, a NumPy / PyTorch / TensorFlow comparison, self-check cells and finished plotting code. Some labs live on exercise branches until they are merged:
+Each lab is a Jupyter notebook (Chinese; the two-layer network also has an English version) with formulas, API tables, a NumPy / PyTorch / TensorFlow comparison, self-check cells and finished plotting code.
 
-| Lab | What you implement | Functions to write | Branch |
-| --- | --- | --- | --- |
-| [01 · Two-layer neural network (NumPy)](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-zh/02_deep_learning/01_two_layer_nn_numpy) | Forward pass, binary cross-entropy, backpropagation, gradient checking on Two Moons | 14 | [`exercise/two-layer-nn-zh`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-zh) |
-| [02 · CNN on MNIST](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm/02_deep_learning/02_cnn_mnist_pytorch) | NumPy `conv2d` and max pooling, then a PyTorch CNN with a full train / validate / test pipeline (≈98% test accuracy) | 17 | [`exercise/cnn-rnn-lstm`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm) |
-| [03 · RNN memory task](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm/02_deep_learning/03_rnn_memory_pytorch) | Hand-written RNN, BPTT, gradient clipping; sequence lengths 10 / 30 / 100 | 7 | [`exercise/cnn-rnn-lstm`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm) |
-| [04 · LSTM memory task](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm/02_deep_learning/04_lstm_memory_pytorch) | Hand-written LSTM checked against `nn.LSTMCell`; forget-gate bias and gate visualization | 5 | [`exercise/cnn-rnn-lstm`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm) |
+| Lab | What you implement | Functions to write |
+| --- | --- | --- |
+| [01 · Two-layer neural network (NumPy)](02_deep_learning/01_two_layer_nn_numpy/README.md) | Forward pass, binary cross-entropy, backpropagation, gradient checking on Two Moons | 14 |
+| [02 · CNN on MNIST](02_deep_learning/02_cnn_mnist_pytorch/README.md) | NumPy `conv2d` and max pooling, then a PyTorch CNN with a full train / validate / test pipeline (≈98% test accuracy) | 17 |
+| [03 · RNN memory task](02_deep_learning/03_rnn_memory_pytorch/README.md) | Hand-written RNN, BPTT, gradient clipping; sequence lengths 10 / 30 / 100 | 7 |
+| [04 · LSTM memory task](02_deep_learning/04_lstm_memory_pytorch/README.md) | Hand-written LSTM checked against `nn.LSTMCell`; forget-gate bias and gate visualization | 5 |
 
 ### 03 · LLMs
 
@@ -126,7 +126,7 @@ The workflow:
 3. Run the self-check cell right below it.
 4. When everything passes, run **Restart Kernel → Run All**.
 
-Exercise branches do not contain reference solutions.
+The English two-layer notebook is a blank exercise. The Chinese two-layer notebook includes the author's in-progress solutions; see its [README](02_deep_learning/01_two_layer_nn_numpy/README.md) for how to get the blank version.
 
 ## Quick start
 
@@ -136,8 +136,7 @@ There is no root install. Each project has its own environment managed by [uv](h
 git clone https://github.com/KaneYin/FromPython2Agent.git
 cd FromPython2Agent
 
-# Example: the CNN lab (lives on an exercise branch)
-git checkout exercise/cnn-rnn-lstm
+# Example: the CNN lab
 cd 02_deep_learning/02_cnn_mnist_pytorch
 uv sync
 # Open cnn_mnist_zh.ipynb in VS Code or Jupyter and select .venv/bin/python as the kernel
@@ -163,7 +162,7 @@ Every project README lists its own setup and run location. See the [repository g
 | Kind | Languages |
 | --- | --- |
 | Documentation | English (root README, stage READMEs, FastAPI guides) · 简体中文 (deep-learning labs, two-layer NN notebook, resource index) |
-| Bilingual notebooks | Two-layer NN: [中文](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-zh/02_deep_learning/01_two_layer_nn_numpy) and [English](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-en/02_deep_learning/01_two_layer_nn_numpy), aligned cell by cell |
+| Bilingual notebooks | Two-layer NN: [中文](02_deep_learning/01_two_layer_nn_numpy/two_moons_two_layer_nn_zh.ipynb) and [English](02_deep_learning/01_two_layer_nn_numpy/two_moons_two_layer_nn_en.ipynb), aligned cell by cell |
 | Programming languages | Python (all personal projects and notebooks); TypeScript and Shell in imported reference projects under `90_resources/` |
 
 ## Repository layout
@@ -172,7 +171,7 @@ Every project README lists its own setup and run location. See the [repository g
 FromPython2Agent/
 ├── 00_python_basics/        # 14 notes + exercises
 ├── 01_machine_learning/     # supervised-learning labs (C1 W1–W3), VGG
-├── 02_deep_learning/        # NumPy / PyTorch labs (some on exercise branches)
+├── 02_deep_learning/        # NumPy / PyTorch labs (two-layer NN, CNN, RNN, LSTM)
 ├── 03_llm/                  # minimal chat, transformer study
 ├── 04_rag/                  # basic Ollama RAG
 ├── 05_agents/               # tool-calling agent loop
@@ -185,9 +184,7 @@ FromPython2Agent/
 
 | Branch | Contents |
 | --- | --- |
-| [`main`](https://github.com/KaneYin/FromPython2Agent/tree/main) | Stable learning path |
-| [`exercise/cnn-rnn-lstm`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/cnn-rnn-lstm) | CNN, RNN and LSTM labs |
-| [`exercise/two-layer-nn-zh`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-zh) / [`-en`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/two-layer-nn-en) | Two-layer NN notebook in Chinese / English |
+| [`main`](https://github.com/KaneYin/FromPython2Agent/tree/main) | Learning path, including the deep-learning labs |
 | [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) | Logistic regression TODO exercise |
 
 ## FAQ
@@ -202,11 +199,11 @@ Writing convolution, backpropagation and BPTT by hand shows what each tensor sha
 
 ### Are solutions included?
 
-No. Exercise branches contain only stubs, self-checks and plots. The self-checks tell you whether your implementation is correct.
+Mostly no. The labs contain stubs, self-checks and plots; the self-checks tell you whether your implementation is correct. The one exception is the Chinese two-layer notebook, which holds the author's in-progress answers.
 
-### Why are some labs on separate branches?
+### Why is the logistic-regression exercise on a separate branch?
 
-Each exercise branch can be reviewed and merged on its own without mixing unrelated topics. The tables above link to the branch that holds each lab.
+It is a TODO rewrite of an existing notebook, kept on [`exercise/logistic-regression-todo`](https://github.com/KaneYin/FromPython2Agent/tree/exercise/logistic-regression-todo) until it is reviewed and merged.
 
 ### What is the difference between this repository and a course?
 
