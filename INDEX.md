@@ -6,13 +6,16 @@
 
 ## 个人练习与 Demo
 
-主线顺序为 `00_python_basics → 01_machine_learning → 02_deep_learning → 03_llm → 04_rag → 05_agents → 06_backend`。机器学习与深度学习阶段目前只有说明文件，为后续实现预留位置；课程和参考资料统一放在 `90_resources/`。
+主线顺序为 `00_python_basics → 01_machine_learning → 02_deep_learning → 03_llm → 04_rag → 05_agents → 06_backend`。机器学习阶段包含 Machine Learning Specialization 第一门课 W1–W3 的实验和 VGG 项目，深度学习阶段包含两层网络、CNN、RNN、LSTM 四个带 TODO 的练习；课程和参考资料统一放在 `90_resources/`。
 
 | 目录 | 内容与状态 |
 |---|---|
 | [00_python_basics/](00_python_basics/README.md) | Python 基础笔记与未完全完成的字符串练习 |
-| [01_machine_learning/](01_machine_learning/README.md) | 为后续机器学习实现预留，尚未添加实现 |
-| [02_deep_learning/](02_deep_learning/README.md) | 为后续深度学习实现预留，尚未添加实现 |
+| [01_machine_learning/](01_machine_learning/README.md) | 监督学习实验 C1 W1–W3（线性回归、逻辑回归、正则化）与 [VGG](01_machine_learning/VGG/README.md) 项目 |
+| [02_deep_learning/01_two_layer_nn_numpy/](02_deep_learning/01_two_layer_nn_numpy/README.md) | 两层神经网络（NumPy）：前向传播、BCE、反向传播、梯度检查；中英文两个 notebook |
+| [02_deep_learning/02_cnn_mnist_pytorch/](02_deep_learning/02_cnn_mnist_pytorch/README.md) | CNN on MNIST：NumPy 卷积与池化 → PyTorch CNN、训练流程、特征图与错分样本（17 个 TODO） |
+| [02_deep_learning/03_rnn_memory_pytorch/](02_deep_learning/03_rnn_memory_pytorch/README.md) | RNN 记忆任务：手写 RNN、BPTT、梯度裁剪，T = 10 / 30 / 100（7 个 TODO） |
+| [02_deep_learning/04_lstm_memory_pytorch/](02_deep_learning/04_lstm_memory_pytorch/README.md) | LSTM 记忆任务：手写 LSTM 对照 `nn.LSTMCell`，门控与细胞状态观察（5 个 TODO） |
 | [03_llm/01_minimal_chat/](03_llm/01_minimal_chat/README.md) | 直接调用模型的示例，以及仍有导入和运行问题的抽象层草稿 |
 | [03_llm/02_transformer_from_scratch/](03_llm/02_transformer_from_scratch/README.md) | Transformer 学习 Notebook，实现部分未完成 |
 | [04_rag/01_basic_rag/](04_rag/01_basic_rag/README.md) | 基于 Ollama 的 RAG Demo，模拟服务响应的完整流程检查通过 |
