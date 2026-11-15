@@ -1,42 +1,44 @@
-# 01 - Two-Layer Neural Network（NumPy 从零实现）
+# 01 - Two-Layer Neural Network (NumPy from scratch)
 
-只用 NumPy 手写一个 `2 → 5 → 1` 的两层神经网络，在 Two Moons 数据集上做二分类。练习内容包括 Forward Propagation、Binary Cross-Entropy、Backpropagation、Numerical Gradient Checking 和 Batch Gradient Descent。
+[中文说明](README_zh.md)
 
-## 状态
+Build a `2 → 5 → 1` two-layer neural network by hand with NumPy only, and use it for binary classification on the Two Moons dataset. The exercise covers Forward Propagation, Binary Cross-Entropy, Backpropagation, Numerical Gradient Checking, and Batch Gradient Descent.
 
-练习版本。14 个核心函数保留签名、docstring 和 TODO，函数体待实现。公式、API 速查表、自检单元格和全部绘图代码已提供。本分支不包含参考答案。
+## Status
 
-| 分支 | Notebook | 语言 |
-| --- | --- | --- |
-| `exercise/two-layer-nn-zh` | `two_moons_two_layer_nn_zh.ipynb` | 中文 |
-| `exercise/two-layer-nn-en` | `two_moons_two_layer_nn_en.ipynb` | English |
+Exercise version. The 14 core functions keep their signatures, docstrings, and TODOs; the bodies are left for you to write. Formulas, an API quick reference, self-check cells, and all plotting code are provided. No reference solution is included.
 
-两份 notebook 的单元格一一对应，代码、自检和期望值相同。
+| Notebook | Language |
+| --- | --- |
+| `two_moons_two_layer_nn_zh.ipynb` | Chinese |
+| `two_moons_two_layer_nn_en.ipynb` | English |
 
-## 环境与运行
+The two notebooks match cell for cell, with the same code, self-checks, and expected values.
 
-在本目录执行：
+## Setup and running
+
+From this directory:
 
 ```bash
 uv sync
 ```
 
-然后在 VS Code / Jupyter 中打开 `two_moons_two_layer_nn_zh.ipynb`，选择 `.venv/bin/python` 作为 kernel，从上往下运行。实现完一个函数后，运行紧随其后的自检单元格。
+Then open `two_moons_two_layer_nn_en.ipynb` (or `two_moons_two_layer_nn_zh.ipynb`) in VS Code / Jupyter, pick `.venv/bin/python` as the kernel, and run from top to bottom. After implementing a function, run the self-check cell right after it.
 
-依赖：NumPy（模型）、scikit-learn（只用于 `make_moons` 和 `train_test_split`）、Matplotlib（绘图）、ipykernel。
+Dependencies: NumPy (the model), scikit-learn (only for `make_moons` and `train_test_split`), Matplotlib (plots), ipykernel.
 
-## 内容
+## Contents
 
-| Lab | 主题 | 待实现函数 |
+| Lab | Topic | Functions to implement |
 | --- | --- | --- |
-| 1 | 数据准备 | `standardize_features` |
-| 2 | 参数初始化（He） | `initialize_parameters` |
+| 1 | Dataset preparation | `standardize_features` |
+| 2 | Parameter initialization (He) | `initialize_parameters` |
 | 3 | Forward Propagation | `relu`, `relu_derivative`, `sigmoid`, `forward` |
-| 4 | Loss 与 Backpropagation | `compute_loss`, `backward`, `gradient_check` |
-| 5 | 训练循环 | `update_parameters`, `train` |
-| 6 | 评估与可视化 | `predict_proba`, `predict`, `accuracy` |
-| 7 | 学习率 / 隐藏层宽度实验 | 无 |
+| 4 | Loss and Backpropagation | `compute_loss`, `backward`, `gradient_check` |
+| 5 | Training loop | `update_parameters`, `train` |
+| 6 | Evaluation and visualization | `predict_proba`, `predict`, `accuracy` |
+| 7 | Learning-rate / hidden-width experiments | None |
 
-已提供的观察图：数据散点图、He 初始化分布、激活函数曲线、梯度检查误差、Loss Curve、NN 与 Logistic Regression 的决策边界对比、每个隐藏神经元的激活图、决策边界随训练的演化、学习率对比、隐藏层宽度对比。
+Plots provided for observation: data scatter plots, He initialization distribution, activation curves, gradient-check errors, loss curve, NN vs. Logistic Regression decision boundaries, per-neuron hidden activation maps, decision-boundary evolution during training, learning-rate comparison, and hidden-width comparison.
 
-[返回 Deep learning](../README.md)
+[Back to Deep learning](../README.md)
