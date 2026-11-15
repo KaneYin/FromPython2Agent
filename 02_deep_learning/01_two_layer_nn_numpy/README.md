@@ -1,15 +1,17 @@
 # 01 - Two-Layer Neural Network (NumPy from scratch)
 
+[中文说明](README_zh.md)
+
 Build a `2 → 5 → 1` two-layer neural network by hand with NumPy only, and use it for binary classification on the Two Moons dataset. The exercise covers Forward Propagation, Binary Cross-Entropy, Backpropagation, Numerical Gradient Checking, and Batch Gradient Descent.
 
 ## Status
 
-Exercise version. The 14 core functions keep their signatures, docstrings, and TODOs; the bodies are left for you to write. Formulas, an API quick reference, self-check cells, and all plotting code are provided. This branch contains no reference solution.
+Exercise version. The 14 core functions keep their signatures, docstrings, and TODOs; the bodies are left for you to write. Formulas, an API quick reference, self-check cells, and all plotting code are provided. No reference solution is included.
 
-| Branch | Notebook | Language |
-| --- | --- | --- |
-| `exercise/two-layer-nn-zh` | `two_moons_two_layer_nn_zh.ipynb` | Chinese |
-| `exercise/two-layer-nn-en` | `two_moons_two_layer_nn_en.ipynb` | English |
+| Notebook | Language |
+| --- | --- |
+| `two_moons_two_layer_nn_zh.ipynb` | Chinese |
+| `two_moons_two_layer_nn_en.ipynb` | English |
 
 The two notebooks match cell for cell, with the same code, self-checks, and expected values.
 
@@ -21,7 +23,7 @@ From this directory:
 uv sync
 ```
 
-Then open `two_moons_two_layer_nn_en.ipynb` in VS Code / Jupyter, pick `.venv/bin/python` as the kernel, and run from top to bottom. After implementing a function, run the self-check cell right after it.
+Then open `two_moons_two_layer_nn_en.ipynb` (or `two_moons_two_layer_nn_zh.ipynb`) in VS Code / Jupyter, pick `.venv/bin/python` as the kernel, and run from top to bottom. After implementing a function, run the self-check cell right after it.
 
 Dependencies: NumPy (the model), scikit-learn (only for `make_moons` and `train_test_split`), Matplotlib (plots), ipykernel.
 
