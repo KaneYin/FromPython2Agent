@@ -7,8 +7,8 @@ The 2026-10-26 layout uses stable topic stages with a second level of ordering f
 | Prefix | Stage | What belongs here |
 | --- | --- | --- |
 | `00` | [Python basics](../00_python_basics/README.md) | Language notes, standard-library practice, and small exercises |
-| `01` | [Machine learning](../01_machine_learning/README.md) | Classical ML implementations and experiments; currently reserved |
-| `02` | [Deep learning](../02_deep_learning/README.md) | Neural-network foundations and implementations; currently reserved |
+| `01` | [Machine learning](../01_machine_learning/README.md) | Classical ML implementations and experiments: supervised-learning labs (C1 W1–W3) and a VGG project |
+| `02` | [Deep learning](../02_deep_learning/README.md) | Neural-network foundations and implementations: two-layer NN, CNN, RNN and LSTM exercises |
 | `03` | [LLMs](../03_llm/README.md) | Chat interfaces, tokenization, transformers, training, and inference implementations |
 | `04` | [RAG](../04_rag/README.md) | Embeddings, retrieval, indexing, and retrieval-augmented generation projects |
 | `05` | [Agents](../05_agents/README.md) | Tool loops, planning, memory, agent evaluation, and orchestration implementations |
