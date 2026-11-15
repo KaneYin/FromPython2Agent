@@ -1,0 +1,12 @@
+[project]
+name = "cnn-mnist-pytorch"
+version = "0.1.0"
+description = "CNN on MNIST: NumPy conv2d from scratch, then a PyTorch classifier"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "torch>=2.9.0",
+    "torchvision>=0.24.0",
+]
