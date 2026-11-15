@@ -6,14 +6,18 @@ Build a `2 → 5 → 1` two-layer neural network by hand with NumPy only, and us
 
 ## Status
 
-Exercise version. The 14 core functions keep their signatures, docstrings, and TODOs; the bodies are left for you to write. Formulas, an API quick reference, self-check cells, and all plotting code are provided. No reference solution is included.
+The 14 core functions keep their signatures, docstrings, and TODOs. Formulas, an API quick reference, self-check cells, and all plotting code are provided.
 
-| Notebook | Language |
-| --- | --- |
-| `two_moons_two_layer_nn_zh.ipynb` | Chinese |
-| `two_moons_two_layer_nn_en.ipynb` | English |
+| Notebook | Language | Contents |
+| --- | --- | --- |
+| `two_moons_two_layer_nn_zh.ipynb` | Chinese | The author's in-progress solutions, with outputs |
+| `two_moons_two_layer_nn_en.ipynb` | English | Blank exercise version |
 
-The two notebooks match cell for cell, with the same code, self-checks, and expected values.
+The two notebooks match cell for cell, with the same self-checks and expected values. The Chinese solutions are a learner's own attempt, not a checked reference solution. To get a blank Chinese notebook, run this from the repository root:
+
+```bash
+git show 5f52464:02_deep_learning/01_two_layer_nn_numpy/two_moons_two_layer_nn_zh.ipynb > two_moons_two_layer_nn_zh_exercise.ipynb
+```
 
 ## Setup and running
 

@@ -6,14 +6,18 @@
 
 ## 状态
 
-练习版本。14 个核心函数保留签名、docstring 和 TODO，函数体待实现。公式、API 速查表、自检单元格和全部绘图代码已提供。不包含参考答案。
+14 个核心函数保留签名、docstring 和 TODO。公式、API 速查表、自检单元格和全部绘图代码已提供。
 
-| Notebook | 语言 |
-| --- | --- |
-| `two_moons_two_layer_nn_zh.ipynb` | 中文 |
-| `two_moons_two_layer_nn_en.ipynb` | English |
+| Notebook | 语言 | 内容 |
+| --- | --- | --- |
+| `two_moons_two_layer_nn_zh.ipynb` | 中文 | 作者做到一半的答案，含运行输出 |
+| `two_moons_two_layer_nn_en.ipynb` | English | 空白练习版 |
 
-两份 notebook 的单元格一一对应，代码、自检和期望值相同。
+两份 notebook 的单元格一一对应，自检和期望值相同。中文版里的答案是学习者自己的作答，不是经过核对的参考答案。需要空白的中文练习版时，在仓库根目录执行：
+
+```bash
+git show 5f52464:02_deep_learning/01_two_layer_nn_numpy/two_moons_two_layer_nn_zh.ipynb > two_moons_two_layer_nn_zh_exercise.ipynb
+```
 
 ## 环境与运行
 
